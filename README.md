@@ -37,3 +37,16 @@ Once you run main.py in terminal, the program request the two input file (~.tsv 
 Output from the inputs above (extracted_domains.fasta)
 
 ![](./screenshots/example_output_file.png)
+
+
+## Next possible feature
+Sorted randomly, here we have the next possible feature of Cuterle:
+
+- Nicer interface
+- Enable python argument command line
+- List all the domain extracted in decrescent order
+- Choice the domain of interest to be saved in the output file
+- Print max 10 item from the files' list in the folder
+- Sort the domain extracted for each sequence in crescent order
+- Maybe a folder "Input/Output" or "Workinprogress" to save every files
+
