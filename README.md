@@ -1,9 +1,12 @@
-In a couple of days where will be an update!
+<!-- <p align = "center">
+  <a href = "https://devansh3712.github.io/PySQL/"><img src = "https://user-images.githubusercontent.com/58616444/113156144-57560f80-9257-11eb-85a1-1b834c072454.png"></a>
+</p> -->
+
+<h1 align = "center"> Cuterle </h1>
+<p align = "center"><i> Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted. </i></p>
 
 # Cuterle
-Bioinformatic tool which extract every domain annotated by InterProScan
-
-![](./screenshots/main_home.png)
+Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted.
 
 ## Getting started
 
@@ -12,7 +15,7 @@ Bioinformatic tool which extract every domain annotated by InterProScan
 - Python3
 - pip
 
-### Installation
+### Installation of the Python required packages
 
 Install the required Python packages; while you are in the project's root directory run the following command:
 
@@ -21,7 +24,7 @@ Install the required Python packages; while you are in the project's root direct
 pip install -r requirements.txt
 ```
 
-### Usage
+# Usage
 
 In terminal, run the following command. By default, this will only retrieve Bulbasaur.
 
@@ -29,6 +32,8 @@ In terminal, run the following command. By default, this will only retrieve Bulb
 # Run Cuterle
 python3 main.py
 ```
+
+![](./screenshots/main_home.png)
 
 ## Example of interaction with Cuterle
 
