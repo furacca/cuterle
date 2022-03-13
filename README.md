@@ -1,6 +1,13 @@
-<!-- <p align = "center">
-  <a href = "https://devansh3712.github.io/PySQL/"><img src = "https://user-images.githubusercontent.com/58616444/113156144-57560f80-9257-11eb-85a1-1b834c072454.png"></a>
-</p> -->
+<h4 align ="center">
+
+       _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+       |   __           _____  _____  ____        _____        /     \\
+       |  /  \  |    |    |    |      |   \  |    |           /       \\
+       |  |     |    |    |    |__    |___/  |    |__        / _ _ _ _ \\
+       |  |     |    |    |    |      |\     |    |          \          \\
+       |  \__/   \__/     |    |____  | \    |___ |____       \          \\
+       |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ _ _ _ _ _\\
+</h4>
 
 <h1 align = "center"> Cuterle </h1>
 <p align = "center"><i> Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted. </i></p>
