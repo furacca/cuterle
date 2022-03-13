@@ -45,7 +45,7 @@ Once you run main.py in terminal, the program request the two input file (~.tsv 
 For every input file there is a check which guarantee its existence and the right format. <br>
 **Please be sure to use the right format**
 
-If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file)
+If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file).
 
 <img src="./screenshots/02_first_run.png" width="700">
 <!-- ![](./screenshots/02_first_run.png) -->
@@ -103,7 +103,3 @@ Almost certainly not all in one go.
 - Choice a domains' list to be saved in the output file
 - Print max 10 item from the files' list in the folder
 - Nicer interface
-
-**OTHER IDEAS NOT SO WELL EXPRESSED**
-- Create a list of acce
-
