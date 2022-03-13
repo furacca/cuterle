@@ -11,7 +11,7 @@ Cuterle is a bioinformatic tool which return an output file (`extracted_domain.f
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
 - [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
 - [Next updates](#next-updates)<br>
-
+<br><br>
 ## Getting started
 
 ### Prerequisites
@@ -49,6 +49,7 @@ If you are not sure about how getting the tsv file follow [How to get a ~.tsv fi
 
 <img src="./screenshots/02_first_run.png" width="700">
 <!-- ![](./screenshots/02_first_run.png) -->
+<br>
 
 ## Output example - Fasta list
 
@@ -67,7 +68,7 @@ At the moment it's possibile to change the syntax only by editing the code. (see
 
 <img src="/screenshots/04_first_output.png" width="700">
 <!-- ![](./screenshots/04_first_output.png) -->
-
+<br><br>
 
 ## Output example - Sequence's draw
 It's so bad, that's so good. There will be a lot (one or two) of updates for the drawing option. See [Next updates](#next-updates).
@@ -75,30 +76,34 @@ It's so bad, that's so good. There will be a lot (one or two) of updates for the
 <img src="./screenshots/03_first_graphical_output.jpg" width="700">
 <!-- ![](./screenshots/03_first_graphical_output.jpg) -->
 
-
 ## How to get a ~.tsv file
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install it on some local machine
 2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtein the tsv file (like in the screenshot below):
 <img src="./screenshots/06_InterProWebsite.png" width="700">
 <!-- ![](./screenshots/06_InterProWebsite.png) -->
+<br><br>
+
 
 ## Next updates
 Almost certainly not all in one go.
 
 **TOP PRIORITY**
 - Enable python argument command line to be bash script friendly (in the next update)
+- Change the InterPro annotation in the draw with the SMART domain description (e.g. from "von Willebrand Factor A" to "VWFA"
 
 **MEDIUM PRIORITY**
 - Use some nice color to draw the domains (same domain, same color)
 - Change the way to write down the domains's name (label with the same color of the domain)
 - Resize the output images without losing too much quality
 
-**OTHER**
+**RANDOM -LOW PRIORITY**
 - Possibily of choice for the name's format of sequences in fasta output
 - Possibily of choice for the order of domain (decrescent order for number of domain or for the id?)
-- Choice the domain of interest to be saved in the output file
+- Choice a domains' list to be saved in the output file
 - Print max 10 item from the files' list in the folder
-- Nicer interface (only at the end)
+- Nicer interface
 
+**OTHER IDEAS NOT SO WELL EXPRESSED**
+- Create a list of acce
 
