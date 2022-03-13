@@ -3,11 +3,12 @@
 # Cuterle
 Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted.
 
-[Getting started](#getting-started)<br>
-[Usage](#usage)<br>
-[Output example - Fasta list](#output-example)<br>
-[Output example - Sequence's draw](#output-example---sequences-draw)<br>
-[Next updates](#next-updates)<br>
+**Index**
+- [Getting started](#getting-started)<br>
+- [Usage](#usage)<br>
+- [Output example - Fasta list](#output-example---fasta-list)<br>
+- [Output example - Sequence's draw](#output-example---sequences-draw)<br>
+- [Next updates](#next-updates)<br>
 
 ## Getting started
 
