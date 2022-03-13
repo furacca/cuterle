@@ -46,6 +46,19 @@ For every input file there is a check which guarantee its existence and the righ
 
 ## Output example - Fasta list
 
+All the extracted domains have the follow syntax:<br>
+- First line: `>{1} - START: {2} - END: {3} - {4} - {5}` 
+- Second line: the sequence
+
+Where:
+ - {1} - Protein accession (e.g. P51587)
+ - {2} - Start location of the domain
+ - {3} - End location of the domain
+ - {4} - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
+ - {5} - InterPro annotations - description (e.g. BRCA2 repeat)
+
+At the moment it's possibile to change the syntax only by editing the code. (see: [Next updates](#next-updates))
+
 ![](./screenshots/04_first_output.png)
 
 
@@ -60,9 +73,10 @@ For every input file there is a check which guarantee its existence and the righ
 
 **MEDIUM PRIORITY**
 - Use some nice color to draw the domains (same domain, same color)
+- Change the way to write down the domains's name (label with the same color of the domain)
 
 **OTHER**
-- Possibily of choice for the name of sequences in fasta output
+- Possibily of choice for the name's format of sequences in fasta output
 - Possibily of choice for the order of domain (decrescent order for number of domain or for the id?)
 - Choice the domain of interest to be saved in the output file
 - Print max 10 item from the files' list in the folder
