@@ -37,7 +37,7 @@ By default, the program will run the assisted mode (no, there isn't (still) a ba
 # Run Cuterle
 python3 main.py
 ```
-<img src="./screenshots/01_first_view.png" width="800">
+<img src="./screenshots/01_first_view.png" width="700">
 <!-- ![](./screenshots/01_first_view.png) -->
 
 
@@ -47,7 +47,7 @@ For every input file there is a check which guarantee its existence and the righ
 
 If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file)
 
-<img src="./screenshots/02_first_run.png" width="800">
+<img src="./screenshots/02_first_run.png" width="700">
 <!-- ![](./screenshots/02_first_run.png) -->
 
 ## Output example - Fasta list
@@ -65,14 +65,14 @@ Where:
 
 At the moment it's possibile to change the syntax only by editing the code. (see: [Next updates](#next-updates))
 
-<img src="/screenshots/04_first_output.png" width="800">
+<img src="/screenshots/04_first_output.png" width="700">
 <!-- ![](./screenshots/04_first_output.png) -->
 
 
 ## Output example - Sequence's draw
 It's so bad, that's so good. There will be a lot (one or two) of updates for the drawing option. See [Next updates](#next-updates).
 
-<img src="./screenshots/03_first_graphical_output.jpg" width="800">
+<img src="./screenshots/03_first_graphical_output.jpg" width="700">
 <!-- ![](./screenshots/03_first_graphical_output.jpg) -->
 
 
@@ -80,7 +80,7 @@ It's so bad, that's so good. There will be a lot (one or two) of updates for the
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install it on some local machine
 2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtein the tsv file (like in the screenshot below):
-<img src="./screenshots/06_InterProWebsite.png" width="800">
+<img src="./screenshots/06_InterProWebsite.png" width="700">
 <!-- ![](./screenshots/06_InterProWebsite.png) -->
 
 ## Next updates
