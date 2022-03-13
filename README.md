@@ -3,6 +3,7 @@
 # Cuterle
 Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted.
 
+
 ## Getting started
 
 ### Prerequisites
@@ -19,7 +20,7 @@ Install the required Python packages; while you are in the project's root direct
 pip install -r requirements.txt
 ```
 
-# Usage
+## Usage
 
 In terminal, run the following command. By default, this will only retrieve Bulbasaur.
 
@@ -28,17 +29,13 @@ In terminal, run the following command. By default, this will only retrieve Bulb
 python3 main.py
 ```
 
-![](./screenshots/main_home.png)
+![](./screenshots/01_first_view.png)
 
-## Example of interaction with Cuterle
 
-Once you run main.py in terminal, the program request the two input file (~.tsv and ~.fasta)
+Once you run main.py in terminal, the program request the two input file (~.tsv and ~.fasta).
+For every input file there is a check which guarantee its existence and the right format.
 
-![](./screenshots/example_input-output.png)
 
-Output from the inputs above (extracted_domains.fasta)
-
-![](./screenshots/example_output_file.png)
 
 
 ## Next possible feature
