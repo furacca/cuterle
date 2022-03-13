@@ -4,14 +4,14 @@
 Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted.
 
 
-## Getting started
+# Getting started
 
-### Prerequisites
+## Prerequisites
 
 - Python3
 - pip
 
-### Installation of the Python required packages
+## Installation of the Python required packages
 
 Install the required Python packages; while you are in the project's root directory run the following command:
 
@@ -32,27 +32,29 @@ python3 main.py
 ![](./screenshots/01_first_view.png)
 
 
-Once you run main.py in terminal, the program request the two input file (~.tsv and ~.fasta).
-For every input file there is a check which guarantee its existence and the right format.
+Once you run main.py in terminal, the program request the two input file (~.tsv and ~.fasta).<br>
+For every input file there is a check which guarantee its existence and the right format. <br>
+**Please be sure to use the right format**
+
+![](./screenshots/02_first_run.png)
 
 
 
 
-## Next possible feature
-Sorted randomly, here we have the next possible feature of Cuterle:
 
-TOP PRIORITY
+# Next updates
+
+**TOP PRIORITY**
 - Enable python argument command line to be bash script friendly (work in progress)
 
-OTHER
+**MEDIUM PRIORITY**
+- Use some nice color to draw the domains (same domain, same color)
 
-- Nicer interface (only at the end)
-- Draw a schematic protein with the domains draw up (potentially done)
-- List all the domain extracted in decrescent order (done)
+**OTHER**
+- Possibily of choice for the name of sequences in fasta output
 - Possibily of choice for the order of domain (decrescent order for number of domain or for the id?)
-- Sort the domain extracted for each sequence in crescent order
 - Choice the domain of interest to be saved in the output file
 - Print max 10 item from the files' list in the folder
+- Nicer interface (only at the end)
 
-- Maybe a folder "Input/Output" or "Workinprogress" to save every files
 
