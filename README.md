@@ -3,11 +3,13 @@
 # Cuterle
 Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART from the list of protein (`~.fasta file`) submitted.
 
+
 **Index**
 - [Getting started](#getting-started)<br>
 - [Usage](#usage)<br>
 - [Output example - Fasta list](#output-example---fasta-list)<br>
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
+- [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
 - [Next updates](#next-updates)<br>
 
 ## Getting started
@@ -28,7 +30,8 @@ pip install -r requirements.txt
 
 ### Usage
 
-In terminal, run the following command. By default, this will only retrieve Bulbasaur.
+In terminal, run the following command. <br>
+By default, the program will run the assisted mode (no, there isn't (still) a bash scriptable mode, see [Next updates](#next-updates)).
 
 ```bash
 # Run Cuterle
@@ -41,6 +44,8 @@ python3 main.py
 Once you run main.py in terminal, the program request the two input file (~.tsv and ~.fasta).<br>
 For every input file there is a check which guarantee its existence and the right format. <br>
 **Please be sure to use the right format**
+
+If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file)
 
 ![](./screenshots/02_first_run.png)
 
@@ -63,13 +68,22 @@ At the moment it's possibile to change the syntax only by editing the code. (see
 
 
 ## Output example - Sequence's draw
+It's so bad, that's so good. There will be a lot (one or two) of updates for the drawing option. See [Next updates](#next-updates).
 
 ![](./screenshots/03_first_graphical_output.jpg)
 
+
+## How to get a ~.tsv file
+There are two main way to get an tsv file from InterPro:
+1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install it on some local machine
+2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtein the tsv file (like in the screenshot below):
+![](./screenshots/06_InterProWebsite.png)
+
 ## Next updates
+Almost certainly not all in one go.
 
 **TOP PRIORITY**
-- Enable python argument command line to be bash script friendly (work in progress)
+- Enable python argument command line to be bash script friendly (in the next update)
 
 **MEDIUM PRIORITY**
 - Use some nice color to draw the domains (same domain, same color)
