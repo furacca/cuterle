@@ -90,7 +90,7 @@ Almost certainly not all in one go.
 
 **TOP PRIORITY**
 - Enable python argument command line to be bash script friendly (in the next update)
-- Change the InterPro annotation in the draw with the SMART domain description (e.g. from "von Willebrand Factor A" to "VWFA"
+- Change the InterPro annotation in the draw with the SMART domain description (e.g. from "von Willebrand Factor A" to "VWFA")
 
 **MEDIUM PRIORITY**
 - Use some nice color to draw the domains (same domain, same color)
