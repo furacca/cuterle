@@ -32,7 +32,7 @@ pip install -r requirements.txt
 
 In terminal, run the following command. <br>
 By default, the program will run the assisted mode (no, there isn't (still) a bash scriptable mode, see [Next updates](#next-updates)).
-
+Assisted mode is **a lot** verbose.
 ```bash
 # Run Cuterle
 python3 main.py
@@ -56,10 +56,10 @@ Summary table (first column `Domain name`, second column `Domain's number found`
 ## Output example - Fasta list
 
 All the extracted domains have the follow syntax:<br>
-- First line: `>{1} - START: {2} - END: {3} - {4} - {5}` 
-- Second line: the sequence
+- `>{1} - START: {2} - END: {3} - {4} - {5}` - First line
+- `extracted domain sequence` - Second line
 
-Where:
+Where every {number} refer to the follow information:
  - {1} - Protein accession (e.g. P51587)
  - {2} - Start location of the domain
  - {3} - End location of the domain
@@ -73,7 +73,7 @@ At the moment it's possibile to change the syntax only by editing the code. (see
 <br><br>
 
 ## Output example - Sequence's draw
-It's so bad, that's so good. There will be a lot (one or two) of updates for the drawing option. See [Next updates](#next-updates).
+It's so bad, that's so good. There will be a lot (one or two) updates for the drawing option. See [Next updates](#next-updates).
 
 <img src="./screenshots/03_first_graphical_output.jpg" width="700">
 <!-- ![](./screenshots/03_first_graphical_output.jpg) -->
@@ -81,7 +81,7 @@ It's so bad, that's so good. There will be a lot (one or two) of updates for the
 ## How to get a ~.tsv file
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install and run it on some local machine
-2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtein the tsv file (like in the screenshot below):
+2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtain the tsv file (like in the screenshot below):
 <img src="./screenshots/06_InterProWebsite.png" width="700">
 <!-- ![](./screenshots/06_InterProWebsite.png) -->
 <br><br>
@@ -93,6 +93,7 @@ Almost certainly not all in one go.
 **TOP PRIORITY**
 - Enable python argument command line to be bash script friendly (in the next update)
 - Change the InterPro annotation in the draw with the SMART domain description (e.g. from "von Willebrand Factor A" to "VWFA")
+- Add a legend for the reducted domain name
 
 **MEDIUM PRIORITY**
 - Domain summary table exported as ~.csv or ~.tsv
@@ -105,4 +106,5 @@ Almost certainly not all in one go.
 - Possibility of choice for the order of domain (decrescent order for number of domain or for the id?)
 - Choice a domains' list to be saved in the output file
 - Print max 10 item from the files' list in the folder
+- Improve text syntax in the assisted mode
 - Nicer interface
