@@ -48,6 +48,7 @@ For every input file there is a check which guarantee its existence and the righ
 If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file).
 
 Summary table (first column `Domain name`, second column `Domain's number found`) is graphically printed (it's not gonna be saved, see [Next updates](#next-updates))
+
 <img src="./screenshots/02_first_run.png" width="700">
 <!-- ![](./screenshots/02_first_run.png) -->
 <br>
