@@ -41,12 +41,13 @@ python3 main.py
 <!-- ![](./screenshots/01_first_view.png) -->
 
 
-Once you run main.py in terminal, the program request the two input file (~.tsv and ~.fasta).<br>
+Once you run main.py in terminal, the program request the two input files (~.tsv and ~.fasta).<br>
 For every input file there is a check which guarantee its existence and the right format. <br>
 **Please be sure to use the right format**
 
 If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file).
 
+Summary table (first column `Domain name`, second column `Domain's number found`) is graphically printed (it's not gonna be saved, see [Next updates](#next-updates))
 <img src="./screenshots/02_first_run.png" width="700">
 <!-- ![](./screenshots/02_first_run.png) -->
 <br>
@@ -93,13 +94,14 @@ Almost certainly not all in one go.
 - Change the InterPro annotation in the draw with the SMART domain description (e.g. from "von Willebrand Factor A" to "VWFA")
 
 **MEDIUM PRIORITY**
+- Domain summary table exported as ~.csv or ~.tsv
 - Use some nice color to draw the domains (same domain, same color)
 - Change the way to write down the domains's name (label with the same color of the domain)
 - Resize the output images without losing too much quality
 
-**RANDOM -LOW PRIORITY**
-- Possibily of choice for the name's format of sequences in fasta output
-- Possibily of choice for the order of domain (decrescent order for number of domain or for the id?)
+**RANDOM - LOW PRIORITY**
+- Possibility of choice for the name's format of sequences in fasta output
+- Possibility of choice for the order of domain (decrescent order for number of domain or for the id?)
 - Choice a domains' list to be saved in the output file
 - Print max 10 item from the files' list in the folder
 - Nicer interface
