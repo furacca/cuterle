@@ -33,9 +33,12 @@ pip install -r requirements.txt
 From the release 1.2.0 it's available the **manual mode**, making the program script-friendly.
 
 Asking help to the program:
+
 ```
 python3 main.py -h
+```
 
+```
 usage: main.py  [options]
 
 -----------------------------------------------------------------
@@ -146,7 +149,6 @@ There are two main way to get an tsv file from InterPro:
 
 
 ## Next updates
-Almost certainly not all in one go.
 
 **TOP PRIORITY**
 - None
