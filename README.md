@@ -33,10 +33,9 @@ pip install -r requirements.txt
 From the release 1.2.0 it's available the **manual mode**, making the program script-friendly.
 
 Asking help to the program:
-```commandline
+```
 python3 main.py -h
-```
-```
+
 usage: main.py  [options]
 
 -----------------------------------------------------------------
@@ -57,15 +56,15 @@ LIST OF OUTPUT FILE
 NAME FORMAT
     The name for every sequence added to extracted_domain.fasta is [>1,2,3,4,5]
 
-    {1} - Protein accession (e.g. P51587)
-    {2} - Start location of the domain
-    {3} - End location of the domain
-    {4} - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
-    {5} - InterPro annotations - description (e.g. BRCA2 repeat)
+    1 - Protein accession (e.g. P51587)
+    2 - Start location of the domain
+    3 - End location of the domain
+    4 - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
+    5 - InterPro annotations - description (e.g. BRCA2 repeat)
 
     It is possible to CHANGE the order for every tag;
         e.g. [-nf 1] or [-nf 1,2,3,4] or [-nf 5,4,3,2,2,2,1]
-    DO NOT USE SPACE!
+    DO NOT USE SPACE between the number!
 ------------------------------------------
 
 optional arguments:
@@ -77,13 +76,22 @@ optional arguments:
   -savetable         Export all kind of domains extracted in ~.csv file, sort by matches
   -draw_image        FOR EACH sequences create a ~.jpg file reporting sequence+domains
 ```
+<br>
+
+Example manual mode syntax:
+```
+python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -nf 1,2,3 -savetable -drawimage
+```
+
+
+
 ### Usage - Assisted mode
 
 In terminal run:
 ```bash
 python3 main.py
 ```
-By default, the program will run the assisted mode.
+By default, the program will run the assisted mode. <br>
 Assisted mode is **a lot** verbose.
 
 <img src="./screenshots/01_first_view.png" width="700">

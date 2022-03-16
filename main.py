@@ -32,15 +32,15 @@ description_message = '''\
                         NAME FORMAT
                             The name for every sequence added to extracted_domain.fasta is [>1,2,3,4,5]
                             
-                            {1} - Protein accession (e.g. P51587)
-                            {2} - Start location of the domain
-                            {3} - End location of the domain
-                            {4} - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
-                            {5} - InterPro annotations - description (e.g. BRCA2 repeat)
+                            1 - Protein accession (e.g. P51587)
+                            2 - Start location of the domain
+                            3 - End location of the domain
+                            4 - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
+                            5 - InterPro annotations - description (e.g. BRCA2 repeat)
                             
                             It is possible to CHANGE the order for every tag;
                                 e.g. [-nf 1] or [-nf 1,2,3,4] or [-nf 5,4,3,2,2,2,1]
-                            DO NOT USE SPACE!
+                            DO NOT USE SPACE between the number!
                         ------------------------------------------
                       '''
 

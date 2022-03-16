@@ -221,7 +221,7 @@ def sequences_drawer(fasta_file, tsv_file, analysis_used):
 
             # OPEN THE IMAGE BY PILLOW
             psimage = Image.open("temp_%s.ps" % z)
-            psimage.load(scale=8)
+            psimage.load(scale=7)
 
             # FOR PNG FORMAT JUST CHANGE EXTENSION IN .png
             psimage.save('domains_view_%s.jpg' % z, dpi=(100, 100), quality=95)
