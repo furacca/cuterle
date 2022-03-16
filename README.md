@@ -1,7 +1,7 @@
 <p align="center"><img src="https://github.com/furacca/cuterle/blob/fa5164fc5c15afe030452a95985a0bebce8e6c9e/screenshots/00_logo.png"></p>
 
 # Cuterle
-Cuterle is a bioinformatic tool which return an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART analysis from the list of protein (`~.fasta file`) submitted.
+Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART analysis from the list of protein (`~.fasta file`) submitted.
 
 
 **Index**
@@ -114,7 +114,7 @@ It's possible to save it.
 ## Output example - Fasta list
 
 All the extracted domains have the follow default syntax:<br>
-- `>{1} - START: {2} - END: {3} - {4} - {5}` - First line
+- `>[{1}] - [START: {2}] - [END: {3}] - [{4}] - [{5}]` - First line
 - `extracted domain sequence` - Second line
 
 Where every {number} refer to the follow information:
