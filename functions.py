@@ -1,17 +1,13 @@
 import os
 import fnmatch
-import turtle
-from turtle import Turtle, Screen
-import pandas as pd
-from Bio import SeqIO
-from PIL import Image
+
 
 # Create a file_list with all the file with the extension requested
 # counter05 it is a counter for set the max number of element printed (by default: 6)
-def print_file_in_the_folder(format):
+def print_file_in_the_folder(format_to_check):
     files_list = []
     for ognifile in os.listdir("./"):
-        if fnmatch.fnmatch(ognifile, format):
+        if fnmatch.fnmatch(ognifile, format_to_check):
             files_list.append(ognifile)
     stringa = ""
     counter05 = 0
@@ -23,15 +19,15 @@ def print_file_in_the_folder(format):
             break
     print(stringa)
 
+
 # <return name_file in files_list> return TRUE if the input file name is in the files_list;
 # otherwise return FALSE
-def existence_file_check(name_file, format):
+def existence_file_check(name_file, format_to_check):
     files_list = []
     for everyfile in os.listdir("./"):
-        if fnmatch.fnmatch(everyfile, format):
+        if fnmatch.fnmatch(everyfile, format_to_check):
             files_list.append(everyfile)
     return name_file in files_list
-
 
 
 def check_column_name(tsv_file):

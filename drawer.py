@@ -1,5 +1,4 @@
 import os
-import fnmatch
 import turtle
 from turtle import Turtle, Screen
 import pandas as pd
@@ -47,7 +46,7 @@ def sequences_drawer(fasta_file, tsv_file, analysis_used):
             style_text_domain = ("Arial", 8, "")
             style_text_nameprotein = ("Arial", 20, "bold")
             style_text_scale = ("Arial", 20, "italic")
-            style_text_segment_scale = ("Arial", 10)
+            style_text_segment_scale = ("Arial", 10, "")
             seq_length = int(dict_result_filtered[0]["2"])
 
             # SCALE THE LENGTH OF THE PROTEIN
@@ -120,7 +119,6 @@ def sequences_drawer(fasta_file, tsv_file, analysis_used):
                 else:
                     if segments_exceed < 50:
                         segments_add = segments_starting_point + segments_exceed
-                        milestone_update = milestone + segments_exceed
                         single_protein_drawer.penup()
                         single_protein_drawer.goto(segments_add, y_point_to_start - 30)
                         single_protein_drawer.pendown()
