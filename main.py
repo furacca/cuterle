@@ -25,11 +25,11 @@ description_message = '''\
                         LIST OF OUTPUT FILE
 
                             extracted_domains.fasta - contains every domains extracted
-                            [optional] domains_list.fasta - contains every kind of domains extracted, sort by matches
+                            [optional] domains_list.csv - contains the table's raw data (domain_name,count)
                             [optional] domains_view[seq_name].jpg - schematic domains draw FOR EACH sequence
                             
                         NAME FORMAT
-                            The name for every sequence added to extracted_domain.fasta is [>1,2,3,4,5]
+                            The name for every sequence added to extracted_domain.fasta is [>1,2,3,4,5,6]
                             
                             1 - Protein accession (e.g. P51587)
                             2 - Length of the domain
