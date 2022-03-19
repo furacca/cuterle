@@ -27,9 +27,9 @@ This program has been written thinking as **improvement of quality of life** for
 <br>
 <br>
 <i> **Exempli gratia**</i><br>
-I want to investigate the relationship between the domains of multiple fishes' species:
+I want to investigate the relationship between the domains of multiple species:
 1) Download the transcriptome of my species target
-2) For each transcriptome obtain a new proteins' fasta list via hmmsearch from <a href="http://hmmer.org/">HMMER</a> ---> [species_01_selected_proteins.fasta]
+2) For each transcriptome obtain a new proteins' fasta list via hmmsearch from <a href="http://hmmer.org/">HMMER</a>
 3) Run an InterPro analysis for each sequences in every fasta list
 4) Run Cuterle to extract every domain from each sequences choosing an InterPro accession ID for automatic domains' extraction (e.g. IPR002035)
 5) Run some MSA and phylogenetic analysis to get some hint about the domain of interest
