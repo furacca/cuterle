@@ -32,10 +32,11 @@ description_message = '''\
                             The name for every sequence added to extracted_domain.fasta is [>1,2,3,4,5]
                             
                             1 - Protein accession (e.g. P51587)
-                            2 - Start location of the domain
-                            3 - End location of the domain
-                            4 - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
-                            5 - InterPro annotations - description (e.g. BRCA2 repeat)
+                            2 - Length of the domain
+                            3 - Start location of the domain
+                            4 - End location of the domain
+                            5 - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
+                            6 - InterPro annotations - description (e.g. BRCA2 repeat)
                             
                             It is possible to CHANGE the order for every tag;
                                 e.g. [-nf 1] or [-nf 1,2,3,4] or [-nf 5,4,3,2,2,2,1]
@@ -280,9 +281,9 @@ save_choice_list = []
 
 if manual_mode:
     if table_choice:
-        with open("domains_list%s.csv" % i, "w") as domain_list:
+        with open("domains_list%s.csv" % i, "w") as domain_csv:
             for everykey in domains_counter_dict:
-                domain_list.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
+                domain_csv.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
     if accession:
         save_choice_list = accession.split(",")
         for everychoice in save_choice_list:
@@ -292,16 +293,18 @@ if manual_mode:
             domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
 else:
     print(separator)
+
+    printing_table(list_of_multiple_table_list)
+
     print(f"\nThere was {len(result_of_analysis_pfam)} Pfam results vs {len(result_of_analysis_smart)} SMART results.")
     print(f"{analysis_used} analysis has been chosen.")
 
-    table_choice = input("Do you want to save this table as ~.csv file? y/n ")
-
     while True:
+        table_choice = input("Do you want to save this table as ~.csv file? y/n ")
         if table_choice == "y":
-            with open("domains_list%s.csv" % i, "w") as domain_list:
+            with open("domains_list%s.csv" % i, "w") as domain_csv:
                 for everykey in domains_counter_dict:
-                    domain_list.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
+                    domain_csv.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
                 print(f"You can find your results in domains_list%s.csv\n" % i)
             break
         elif table_choice == "n":
@@ -312,6 +315,7 @@ else:
     print("\nWhich domains do you want to save?")
     print("- Save all the domains -> 'all'")
     print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
+    print("- None -> 'none' ")
     print("DO NOT use space. If you have some doubt, go back to the readme.")
 
     while True:
@@ -332,6 +336,8 @@ else:
                     pass
                 else:
                     domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
+            break
+        elif save_choice == "none":
             break
         else:
             print("You forgot to add 'index' or 'accession', or made some typos. Retry.\n")
@@ -361,9 +367,11 @@ for er in range(0, number_of_result_of_analysis):
                     sequenza = f"{record.seq}"
         seq_dominio = sequenza[start_location-2:stop_location+2]
         domain_lenght = (stop_location+2)-(start_location-2)
+
         # ----> Renaming the sequence following the input
         if name_format is None:
             name_format = "1,6,2,3,4,5"
+
         name_format_dict = {
             "1": prot_accession,
             "2": start_location,
@@ -372,21 +380,23 @@ for er in range(0, number_of_result_of_analysis):
             "5": interpro_annotation,
             "6": domain_lenght,
         }
+
         name_format_choosen = name_format.split(",")
         name_format_string = ">"
+
         for n in name_format_choosen:
             if n == "1":
                 name_format_string += f" [{name_format_dict[n]}] -"
             elif n == "2":
-                name_format_string += f" [START: {name_format_dict[n]}] -"
+                name_format_string += f" [DOMAIN LENGTH: {name_format_dict[n]}] -"
             elif n == "3":
-                name_format_string += f" [STOP: {name_format_dict[n]}] -"
+                name_format_string += f" [START: {name_format_dict[n]}] -"
             elif n == "4":
-                name_format_string += f" [{name_format_dict[n]}] -"
+                name_format_string += f" [STOP: {name_format_dict[n]}] -"
             elif n == "5":
                 name_format_string += f" [{name_format_dict[n]}] -"
             elif n == "6":
-                name_format_string += f" [DOMAIN LENGTH: {name_format_dict[n]}] -"
+                name_format_string += f" [{name_format_dict[n]}] -"
 
         length_name_format_final = len(name_format_string)
         sliced_text = slice(length_name_format_final - 2)
