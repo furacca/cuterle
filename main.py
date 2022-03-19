@@ -276,22 +276,23 @@ for n in domains_counter_dict:
 list_of_multiple_table_list = sorted(list_of_multiple_table_list, key=lambda item: item[2], reverse=True)
 
 domain_to_save = []
+save_choice_list = []
 
 if manual_mode:
     if table_choice:
         with open("domains_list%s.csv" % i, "w") as domain_list:
             for everykey in domains_counter_dict:
                 domain_list.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
-    if accession != "":
+    if accession:
         save_choice_list = accession.split(",")
         for everychoice in save_choice_list:
             domain_to_save.append(everychoice)
+    else:
+        for everychoice in range(0, len(list_of_multiple_table_list)):
+            domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
 else:
     print(separator)
-
-    printing_table(list_of_multiple_table_list)
-
-    print(f"\nThere was {len(result_of_analysis_pfam)} Pfam results vs {len(result_of_analysis_smart)} results.")
+    print(f"\nThere was {len(result_of_analysis_pfam)} Pfam results vs {len(result_of_analysis_smart)} SMART results.")
     print(f"{analysis_used} analysis has been chosen.")
 
     table_choice = input("Do you want to save this table as ~.csv file? y/n ")
@@ -352,6 +353,7 @@ for er in range(0, number_of_result_of_analysis):
     interpro_annotation = sorted_results_dictionary[er]["12"]
 
     if interpro_accession in domain_to_save:
+        domain_saved += 1
         # ----> USING pro_accession EXTRACT THE SEQUENCES AND SAVE IT IN seq_dominio USING (start/stop)_location
         with open(fasta_file) as elenco_fasta:
             for record in SeqIO.parse(elenco_fasta, "fasta"):
@@ -401,9 +403,9 @@ for er in range(0, number_of_result_of_analysis):
             with open("extracted_domains%s.fasta" % i, "w") as file_output:
                 file_output.write(f"{name_format_string_final}\n")
                 file_output.write(f"{seq_dominio}\n\n")
-        domain_saved += 1
 
-print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
+if manual_mode is False:
+    print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
 
 # *********************************************************************************************
 # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)
