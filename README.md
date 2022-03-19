@@ -1,10 +1,16 @@
-<p align="center"><img src="https://github.com/furacca/cuterle/blob/fa5164fc5c15afe030452a95985a0bebce8e6c9e/screenshots/00_logo.png"></p>
+<p align="center"><img src="./screenshots/00_logo.png"></p>
 
 # Cuterle
 Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART analysis from the list of protein (`~.fasta file`) submitted.
 
+This program use two main analysis of InterPro:
+- Pfam (XX.X) : A large collection of protein families, each represented by multiple sequence alignments and hidden Markov models (HMMs)
+- SMART (X.X) : SMART allows the identification and analysis of domain architectures based on Hidden Markov Models or HMMs
 
+The choice between them are based on which one has more results in ~.tsv file.<br><br>
 **Index**
+- [Suggested use](#suggested-use)<br>
+- [Limitations](#limitations)<br>
 - [Getting started](#getting-started)<br>
 - [Usage - Manual mode](#usage---manual-mode)<br>
 - [Usage - Assisted mode](#usage---assisted-mode)<br>
@@ -12,7 +18,32 @@ Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
 - [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
 - [Next updates](#next-updates)<br>
-<br><br>
+<br>
+
+## Suggested use
+This program has been written thinking as **improvement of quality of life** for extracting the domains. <br>
+<br>
+<i> **Exempli gratia**</i><br>
+I want to investigate the relationship between the domains of multiple fishes' species:
+1) Download the transcriptome of my species target
+2) For each transcriptome obtain a new proteins' fasta list via `hmmsearch` from <a href="http://hmmer.org/">HMMER</a> ---> [species_01_selected_proteins.fasta]
+3) Run an InterPro analysis for each sequences in every fasta list
+4) Run Cuterle to extract every domain from each sequences choosing an InterPro accession ID for automatic domains' extraction (e.g. IPR002035)
+5) Run some MSA and phylogenetic analysis to get some hint about the domain of interest
+
+Thanks to the arguments option, the point 2, 3 and 4 are scriptable, saving **A LOT** of time.<br>
+
+
+
+
+
+## Limitations
+This program does nothing more than extracting the domains from the output of InterPro, 
+choosing which method get more results between Pfam and SMART. <br>
+It can be helpful when you already have a big protein's list pre-selected by hmmsearch ()
+
+
+
 ## Getting started
 
 ### Prerequisites
@@ -75,6 +106,7 @@ optional arguments:
   -m                 Enable the manual mode. -tsv and -fasta argument are requested
   -tsv file.tsv      Input file containing the tsv file output from InterPro
   -fasta file.fasta  Input file containing the fasta sequences
+  -a Pfam or SMART   Prior choice between 'Pfam' and 'SMART'. Read the documentation.
   -nf NF             Name format. Read the documentation. Format: [1,2,3,4,5]
   -savetable         Export all kind of domains extracted in ~.csv file, sort by matches
   -draw_image        FOR EACH sequences create a ~.jpg file reporting sequence+domains
@@ -111,7 +143,6 @@ Summary table (first column `Domain name`, second column `Domain's number found`
 It's possible to save it.
 
 <img src="./screenshots/02_first_run.png" width="700">
-<!-- ![](./screenshots/02_first_run.png) -->
 <br>
 
 ## Output example - Fasta list
@@ -127,24 +158,24 @@ Where every {number} refer to the follow information:
  - {4} - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
  - {5} - InterPro annotations - description (e.g. BRCA2 repeat)
 
-At the moment it's possibile to change the syntax only by running the manual mode.
+At the moment it's possible to change the syntax only by running the manual mode.
 
-<img src="/screenshots/04_first_output.png" width="700">
+<img src="./screenshots/04_extracted_domain_output.png" width="700">
 
 <br><br>
 
 ## Output example - Sequence's draw
 It's so bad, that's so good. There will be a lot (one or two) updates for the drawing option. See [Next updates](#next-updates).
 
-<img src="./screenshots/03_first_graphical_output.jpg" width="700">
-<!-- ![](./screenshots/03_first_graphical_output.jpg) -->
+<img src="./screenshots/03_graphical_output.jpg" width="700">
 
 ## How to get a ~.tsv file
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install and run it on some local machine
 2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtain the tsv file (like in the screenshot below):
-<img src="./screenshots/06_InterProWebsite.png" width="700">
-<!-- ![](./screenshots/06_InterProWebsite.png) -->
+
+2) <img src="./screenshots/06_InterProWebsite.png" width="700">
+
 <br><br>
 
 

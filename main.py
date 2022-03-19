@@ -1,6 +1,5 @@
 from functions import *
 from drawer import *
-from tabulate import tabulate
 from asciithing import *
 from Bio import SeqIO
 import pandas as pd
@@ -66,8 +65,19 @@ cuterle_parser.add_argument("-fasta",
                             metavar="file.fasta"
                             )
 
+cuterle_parser.add_argument("-a",
+                            help="Prior choice between 'Pfam' and 'SMART'. Read the documentation.",
+                            type=str,
+                            metavar="Pfam or SMART"
+                            )
+
 cuterle_parser.add_argument("-nf",
                             help="Name format. Read the documentation. Format: [1,2,3,4,5]",
+                            type=str,
+                            )
+
+cuterle_parser.add_argument("-accession",
+                            help="InterPro annotations - accession ((e.g. IPR002093)",
                             type=str,
                             )
 
@@ -86,22 +96,11 @@ cuterle_options = cuterle_parser.parse_args()
 manual_mode = cuterle_options.m
 tsv_file = cuterle_options.tsv
 fasta_file = cuterle_options.fasta
+prior_choice = cuterle_options.a
 name_format = cuterle_options.nf
+accession = cuterle_options.accession
 table_choice = cuterle_options.savetable
 draw_choice = cuterle_options.draw_image
-
-
-# try:
-#     manual_mode = cuterle_options.manual
-#     tsv_file = cuterle_options.tsvinput
-#     fasta_file = cuterle_options.fastainput
-#     table_choice = cuterle_options.table
-#     draw_choice = cuterle_options.draw_image
-# except AttributeError:
-#     pass
-# finally:
-#     manual_mode = False
-
 
 # *********************************************************************************************
 # START
@@ -187,12 +186,22 @@ number_of_result_of_analysis_pfam = len(result_of_analysis_pfam)
 result_of_analysis_smart = dataframe_file_tsv.loc[dataframe_file_tsv["3"] == "SMART"]
 number_of_result_of_analysis_smart = len(result_of_analysis_smart)
 
-if number_of_result_of_analysis_smart > number_of_result_of_analysis_pfam:
-    result_of_analysis = result_of_analysis_smart
+analysis_used = ""
+# Check if a prior_choice has been made, otherwise count the result and proceed
+if prior_choice == "SMART":
     analysis_used = "SMART"
-else:
-    result_of_analysis = result_of_analysis_pfam
+elif prior_choice == "Pfam":
     analysis_used = "Pfam"
+elif number_of_result_of_analysis_smart > number_of_result_of_analysis_pfam:
+    analysis_used = "SMART"
+elif number_of_result_of_analysis_smart <= number_of_result_of_analysis_pfam:
+    analysis_used = "Pfam"
+
+result_of_analysis = ""
+if analysis_used == "Pfam":
+    result_of_analysis = result_of_analysis_pfam
+elif analysis_used == "SMART":
+    result_of_analysis = result_of_analysis_smart
 
 number_of_result_of_analysis = int(len(result_of_analysis))
 
@@ -203,20 +212,135 @@ unsorted_dictionary_of_result = result_of_analysis.to_dict("records")
 sorted_results_dictionary = sorted(unsorted_dictionary_of_result, key=lambda z: (z["0"], z["6"]))
 
 # *********************************************************************************************
-# COUNTER TO RENAME OUTPUT FILE WHEN ANOTHER FILE WITH THE SAME NAME EXISTS
+# CREATING TWO NEW DICTIONARIES:
+# 1) domains_counter_dict which report for every domain how much copy of it there are
+# 2) domains_interpro_accession_dict which report for every domain the InterPro accession ID
+# *********************************************************************************************
+column_with_description = ""
+if analysis_used == "SMART":
+    column_with_description = "12"
+elif analysis_used == "Pfam":
+    column_with_description = "5"
+
+domains_counter_dict = {}
+domains_interpro_accession_dict = {}
+for er in range(0, number_of_result_of_analysis):
+    signature_description = sorted_results_dictionary[er][column_with_description]
+
+    if signature_description in domains_counter_dict:
+        domains_counter_dict[signature_description] += 1
+    else:
+        domains_counter_dict[signature_description] = 1
+
+    interpro_accession = sorted_results_dictionary[er]["11"]
+
+    if interpro_accession in domains_interpro_accession_dict:
+        pass
+    elif interpro_accession not in domains_interpro_accession_dict:
+        domains_interpro_accession_dict[signature_description] = interpro_accession
+
+# *********************************************************************************************
+# THE i COUNTER SET THE SAME NUMBER FOR ALL OUTPUT FILE, AVOIDING OVERWRITE SOME FILE PREVIOUSLY CREATED
 # *********************************************************************************************
 list_of_file = os.listdir("./")
-if "extracted_domains.fasta" in list_of_file:
+
+if "extracted_domains.fasta" in list_of_file \
+        or "domains_table.csv" in list_of_file \
+        or "domains_list.csv" in list_of_file:
     i = 1
     while os.path.exists("extracted_domains%s.fasta" % i):
+        i += 1
+    while os.path.exists("domains_table%s.csv" % i):
+        i += 1
+    while os.path.exists("domains_list%s.csv" % i):
         i += 1
 else:
     i = ""
 
 # *********************************************************************************************
-# FOR EVERY ROW CONTAINING "Pfam" IN THE TSV FILE
+# PRINT THE DOMAINS TABLE-GRID
+# *********************************************************************************************
+list_of_multiple_table_list = []
+
+for n in domains_counter_dict:
+    one_row_list = []
+
+    for m in domains_interpro_accession_dict:
+        if n == m:
+            one_row_list.append(domains_interpro_accession_dict[m])
+
+    one_row_list.append(n)
+    one_row_list.append(domains_counter_dict[n])
+    list_of_multiple_table_list.append(one_row_list)
+
+list_of_multiple_table_list = sorted(list_of_multiple_table_list, key=lambda item: item[2], reverse=True)
+
+domain_to_save = []
+
+if manual_mode:
+    if table_choice:
+        with open("domains_list%s.csv" % i, "w") as domain_list:
+            for everykey in domains_counter_dict:
+                domain_list.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
+    if accession != "":
+        save_choice_list = accession.split(",")
+        for everychoice in save_choice_list:
+            domain_to_save.append(everychoice)
+else:
+    print(separator)
+
+    printing_table(list_of_multiple_table_list)
+
+    print(f"\nThere was {len(result_of_analysis_pfam)} Pfam results vs {len(result_of_analysis_smart)} results.")
+    print(f"{analysis_used} analysis has been chosen.")
+
+    table_choice = input("Do you want to save this table as ~.csv file? y/n ")
+
+    while True:
+        if table_choice == "y":
+            with open("domains_list%s.csv" % i, "w") as domain_list:
+                for everykey in domains_counter_dict:
+                    domain_list.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
+                print(f"You can find your results in domains_list%s.csv\n" % i)
+            break
+        elif table_choice == "n":
+            break
+        else:
+            print("Strange way to type 'y' or 'n'. Retry.\n")
+
+    print("\nWhich domains do you want to save?")
+    print("- Save all the domains -> 'all'")
+    print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
+    print("DO NOT use space. If you have some doubt, go back to the readme.")
+
+    while True:
+        save_choice_input = input("Write here your choice: ")
+        save_choice_list = save_choice_input.split(",")
+        save_choice = save_choice_list[0]
+
+        if save_choice == "index":
+            for everychoice in save_choice_list:
+                if everychoice == "index":
+                    pass
+                else:
+                    domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
+            break
+        elif save_choice == "all":
+            for everychoice in range(0, len(list_of_multiple_table_list)):
+                if everychoice == "all":
+                    pass
+                else:
+                    domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
+            break
+        else:
+            print("You forgot to add 'index' or 'accession', or made some typos. Retry.\n")
+
+
+# *********************************************************************************************
+# SAVING THE DOMAINS
 # *********************************************************************************************
 # er = Every Result
+domain_saved = 0
 for er in range(0, number_of_result_of_analysis):
     # ----> EXTRACT MULTIPLE VARIABLE
     prot_accession = sorted_results_dictionary[er]["0"]
@@ -224,119 +348,69 @@ for er in range(0, number_of_result_of_analysis):
     signature_description = sorted_results_dictionary[er]["5"]
     start_location = sorted_results_dictionary[er]["6"]
     stop_location = sorted_results_dictionary[er]["7"]
+    interpro_accession = sorted_results_dictionary[er]["11"]
     interpro_annotation = sorted_results_dictionary[er]["12"]
 
-    # ----> USING pro_accession EXTRACT THE SEQUENCES AND SAVE IT IN seq_dominio USING (start/stop)_location
-    with open(fasta_file) as elenco_fasta:
-        for record in SeqIO.parse(elenco_fasta, "fasta"):
-            if record.id == prot_accession:
-                sequenza = f"{record.seq}"
-    seq_dominio = sequenza[start_location-2:stop_location+2]
+    if interpro_accession in domain_to_save:
+        # ----> USING pro_accession EXTRACT THE SEQUENCES AND SAVE IT IN seq_dominio USING (start/stop)_location
+        with open(fasta_file) as elenco_fasta:
+            for record in SeqIO.parse(elenco_fasta, "fasta"):
+                if record.id == prot_accession:
+                    sequenza = f"{record.seq}"
+        seq_dominio = sequenza[start_location-2:stop_location+2]
+        domain_lenght = (stop_location+2)-(start_location-2)
+        # ----> Renaming the sequence following the input
+        if name_format is None:
+            name_format = "1,6,2,3,4,5"
+        name_format_dict = {
+            "1": prot_accession,
+            "2": start_location,
+            "3": stop_location,
+            "4": signature_description,
+            "5": interpro_annotation,
+            "6": domain_lenght,
+        }
+        name_format_choosen = name_format.split(",")
+        name_format_string = ">"
+        for n in name_format_choosen:
+            if n == "1":
+                name_format_string += f" [{name_format_dict[n]}] -"
+            elif n == "2":
+                name_format_string += f" [START: {name_format_dict[n]}] -"
+            elif n == "3":
+                name_format_string += f" [STOP: {name_format_dict[n]}] -"
+            elif n == "4":
+                name_format_string += f" [{name_format_dict[n]}] -"
+            elif n == "5":
+                name_format_string += f" [{name_format_dict[n]}] -"
+            elif n == "6":
+                name_format_string += f" [DOMAIN LENGTH: {name_format_dict[n]}] -"
 
-    # ----> Renaming the sequence following the input
-    if name_format is None:
-        name_format = "1,2,3,4,5"
-    name_format_dict = {
-        "1": prot_accession,
-        "2": start_location,
-        "3": stop_location,
-        "4": signature_description,
-        "5": interpro_annotation,
-    }
-    name_format_choosen = name_format.split(",")
-    name_format_string = ">"
-    for n in name_format_choosen:
-        if n == "1":
-            name_format_string += f" [{name_format_dict[n]}] -"
-        elif n == "2":
-            name_format_string += f" [START: {name_format_dict[n]}] -"
-        elif n == "3":
-            name_format_string += f" [STOP: {name_format_dict[n]}] -"
-        elif n == "4":
-            name_format_string += f" [{name_format_dict[n]}] -"
-        elif n == "5":
-            name_format_string += f" [{name_format_dict[n]}] -"
+        length_name_format_final = len(name_format_string)
+        sliced_text = slice(length_name_format_final - 2)
+        name_format_string_final = name_format_string[sliced_text]
 
-    length_name_format_final = len(name_format_string)
-    sliced_text = slice(length_name_format_final - 2)
-    name_format_string_final = name_format_string[sliced_text]
+        # ----> IF OUTPUTFILE ALREADY EXISTS APPEND THE SEQUENCES REPORTING MULTIPLE VARIABLE FROM ABOVE
+        try:
+            with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                file_output.write(f"{name_format_string_final}\n")
+                file_output.write(f"{seq_dominio}\n\n")
 
-    # ----> IF OUTPUTFILE ALREADY EXISTS APPEND THE SEQUENCES REPORTING MULTIPLE VARIABLE FROM ABOVE
-    try:
-        with open("extracted_domains%s.fasta" % i, "a") as file_output:
-            file_output.write(f"{name_format_string_final}\n")
-            file_output.write(f"{seq_dominio}\n\n")
+        # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
+        except FileNotFoundError:
+            with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                file_output.write(f"{name_format_string_final}\n")
+                file_output.write(f"{seq_dominio}\n\n")
+        domain_saved += 1
 
-    # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
-    except FileNotFoundError:
-        with open("extracted_domains%s.fasta" % i, "w") as file_output:
-            file_output.write(f"{name_format_string_final}\n")
-            file_output.write(f"{seq_dominio}\n\n")
-
-# *********************************************************************************************
-# CREATING A DICTIONARY WHICH IS GOING TO REPORT FOR EVERY DOMAIN HOW MUCH COPY OF IT THERE ARE
-# *********************************************************************************************
-domains_dict = {}
-for er in range(0, number_of_result_of_analysis):
-    signature_description = sorted_results_dictionary[er]["5"]
-    if signature_description in domains_dict:
-        domains_dict[signature_description] += 1
-    else:
-        domains_dict[signature_description] = 1
-
-# *********************************************************************************************
-# PRINT THE DOMAINS TABLE-GRID
-# *********************************************************************************************
-if manual_mode:
-    if table_choice:
-        header = ("Domain name", "Domains' number found")
-        domains_tuple = sorted(domains_dict.items())
-        domains_tuple.insert(0, header)
-        if "domains_list.csv" in list_of_file:
-            i = 1
-            while os.path.exists("domains_list%s.csv" % i):
-                i += 1
-        else:
-            i = ""
-        with open("domains_list%s.csv" % i, "w") as domain_list:
-            for everykey in domains_dict:
-                domain_list.write("%s,%s\n" % (everykey, domains_dict[everykey]))
-else:
-    print(separator)
-    header = ("Domain name", "Domains' number found")
-    domains_tuple = sorted(domains_dict.items())
-    domains_tuple.insert(0, header)
-    print(tabulate(domains_tuple, tablefmt="grid", stralign="center"))
-
-    print(f"\n{analysis_used} analysis has been choosen (has more matches for this sequences).")
-
-    print(f"** {number_of_result_of_analysis} ** domains has been extracted "
-          f"and saved in extracted_domains%s.fasta\n" % i)
-    table_tsv_choice = input("Do you want to save this table as ~.csv file? y/n ")
-    while True:
-        if table_tsv_choice == "y":
-            if "domains_list.csv" in list_of_file:
-                i = 1
-                while os.path.exists("domains_list%s.csv" % i):
-                    i += 1
-            else:
-                i = ""
-            with open("domains_list%s.csv" % i, "w") as domain_list:
-                for everykey in domains_dict:
-                    domain_list.write("%s,%s\n" % (everykey, domains_dict[everykey]))
-                print(f"You can find your results in domains_list%s.csv\n" % i)
-            break
-        elif table_tsv_choice == "n":
-            break
-        else:
-            print("Strange way to type 'y' or 'n'. Retry.\n")
+print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
 
 # *********************************************************************************************
 # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)
 # *********************************************************************************************
 if manual_mode:
     if draw_choice:
-        sequences_drawer(fasta_file, tsv_file, analysis_used)
+        sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
 else:
     print(separator)
     while True:
@@ -348,7 +422,7 @@ else:
             while True:
                 choice = input("\nAre you sure to continue? y/n ")
                 if choice == "y":
-                    sequences_drawer(fasta_file, tsv_file, analysis_used)
+                    sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
                     break
                 elif choice == "n":
                     break
@@ -356,7 +430,7 @@ else:
                     print("Strange way to type 'y' or 'n'. Retry.\n")
             break
         elif wanna_draw == "y":
-            sequences_drawer(fasta_file, tsv_file, analysis_used)
+            sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
             break
         elif wanna_draw == "n":
             break
