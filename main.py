@@ -370,15 +370,15 @@ for er in range(0, number_of_result_of_analysis):
 
         # ----> Renaming the sequence following the input
         if name_format is None:
-            name_format = "1,6,2,3,4,5"
+            name_format = "1,2,3,4,5,6"
 
         name_format_dict = {
             "1": prot_accession,
-            "2": start_location,
-            "3": stop_location,
-            "4": signature_description,
-            "5": interpro_annotation,
-            "6": domain_lenght,
+            "2": domain_lenght,
+            "3": start_location,
+            "4": stop_location,
+            "5": signature_description,
+            "6": interpro_accession,
         }
 
         name_format_choosen = name_format.split(",")

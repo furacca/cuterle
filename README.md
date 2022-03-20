@@ -94,8 +94,8 @@ NAME FORMAT
         2 - Length of the domain (e.g. [DOMAIN LENGHT: (150)])
         3 - Start location of the domain (e.g. [START: 50])
         4 - End location of the domain (e.g. [END: 200])
-        5 - InterPro accession (e.g. [IPR002035])
-        6 - InterPro annotations - description (e.g. [BRCA2 repeat])
+        5 - InterPro annotations - description (e.g. [BRCA2 repeat])
+        6 - InterPro accession (e.g. [IPR002035])
 
     It is possible to CHANGE the order for every tag;
         e.g. [-nf 1] or [-nf 1,2,3,4] or [-nf 5,4,3,2,6,2,2,1]
@@ -161,8 +161,8 @@ Where every {number} refer to the follow information:
 - {2} - Length of the domain (e.g. [DOMAIN LENGHT: (150)])
 - {3} - Start location of the domain (e.g. [START: 50])
 - {4} - End location of the domain (e.g. [END: 200])
-- {5} - Signature accession (e.g. [IPR002035])
-- {6} - InterPro annotations - description (e.g. [BRCA2 repeat])
+- {5} - InterPro annotations - description (e.g. [BRCA2 repeat])
+- {6} - Signature accession (e.g. [IPR002035])
 
 It's possible to change the syntax only by running the manual mode (or manual editing the code).
 
