@@ -35,8 +35,8 @@ description_message = '''\
                             2 - Length of the domain
                             3 - Start location of the domain
                             4 - End location of the domain
-                            5 - Signature accession (e.g. PF09103 / G3DSA:2.40.50.140)
-                            6 - InterPro annotations - description (e.g. BRCA2 repeat)
+                            5 - InterPro annotations - description (e.g. [BRCA2 repeat])
+                            6 - InterPro accession (e.g. [IPR002035])
                             
                             It is possible to CHANGE the order for every tag;
                                 e.g. [-nf 1] or [-nf 1,2,3,4] or [-nf 5,4,3,2,2,2,1]
