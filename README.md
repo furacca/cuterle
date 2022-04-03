@@ -38,6 +38,10 @@ Thanks to the arguments option, the point 2, 3 and 4 are scriptable, saving **A 
 
 
 ## Limitations
+**The biggest limitation** is that Cuterle choose between Pfam and SMART at the beginning of the program,
+and not evaluating it for every protein (see [Next updates](#next-updates)).
+
+<br> 
 This program does nothing more than extracting the domains identified by InterPro, choosing which analysis get more results.<br>
 <br>
 This program **has not** been thought to replace software which perform protein analysis, like <a href="http://smart.embl-heidelberg.de/">SMART</a>.
@@ -192,11 +196,13 @@ There are two main way to get an tsv file from InterPro:
 ## Next updates
 
 **TOP PRIORITY**
-- None
+- Adding a GUI
+- Re-organization of all the code in function, allowing the creation of GUI.
+- Change the way Cuterle choose the analysis (from once-at-start to protein-to-protein choice)
 
 **MEDIUM PRIORITY**
 - None
 
 **LOW PRIORITY**
-- None
+- AppImage release?
 
