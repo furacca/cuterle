@@ -46,6 +46,29 @@ def check_column_name(tsv_file):
             file.write(copia)
 
 
+def i_counter():
+    list_of_file = os.listdir("./")
+    if "extracted_domains.fasta" in list_of_file \
+            or "domains_table.csv" in list_of_file \
+            or "domains_list.csv" in list_of_file:
+        i = 1
+        while os.path.exists("extracted_domains%s.fasta" % i):
+            i += 1
+        while os.path.exists("domains_table%s.csv" % i):
+            i += 1
+        while os.path.exists("domains_list%s.csv" % i):
+            i += 1
+    else:
+        i = ""
+    return i
+
+
+
+
+
+
+
+
 def seq_in_fastafile_count(fasta_file):
     with open(fasta_file, "r") as file:
         fileread = file.read()
@@ -64,3 +87,5 @@ def printing_table(list_of_multiple_table_list):
                    colalign=("center", "center", "center"),
                    showindex="always"
                    ))
+
+
