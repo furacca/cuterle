@@ -187,93 +187,82 @@ for everyrecord in result_dictionary:
     if result_dictionary[everyrecord]["Analysis_used"] == "Pfam":
         pfam_counter += len(result_dictionary[everyrecord]["Extracted_domains"])
     elif result_dictionary[everyrecord]["Analysis_used"] == "SMART":
-        pfam_counter += len(result_dictionary[everyrecord]["Extracted_domains"])
+        smart_counter += len(result_dictionary[everyrecord]["Extracted_domains"])
 
 # Count how many result there are in total for both analysis
 smart_plus_pfam = smart_counter + pfam_counter
+
+# Create a table
 table_list = create_table_row_list(result_dictionary)
 
+if manual_mode:
+    if table_choice:
+        with open("domains_list%s.csv" % i, "w") as domain_csv:
+            for everyrow in table_list:
+                domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
 
-
-if manual_mode and table_choice:
-    with open("domains_list%s.csv" % i, "w") as domain_csv:
-        for everyrow in table_list:
-            domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
-
-save_choice_list = []
-domain_to_save = []
-if manual_mode and accession:
-    save_choice_list = accession.split(",")
-    for everyaccession in table_list:
-        domain_to_save.append(everyaccession)
-
+    save_choice_list = []
+    domain_to_save = []
     if accession:
         save_choice_list = accession.split(",")
-        for everyaccession in save_choice_list:
+        for everyaccession in table_list:
             domain_to_save.append(everyaccession)
+    else:
+        for everyprotein in protein_list:
+            for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+                ip_accession = everydomain["IP_ACCESSION"]
+                if ip_accession in domain_to_save:
+                    pass
+                else:
+                    domain_to_save.append(everydomain["IP_ACCESSION"])
+
 else:
-    for everyprotein in protein_list:
-        for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
-            ip_accession = everydomain["IP_ACCESSION"]
-            if ip_accession in domain_to_save:
-                pass
-            else:
-                domain_to_save.append(everydomain["IP_ACCESSION"])
+    print(separator)
+    printing_table(table_list)
+    print(f"{smart_plus_pfam} domains have been found: {pfam_counter} by Pfam and {smart_counter} by SMART.")
 
-# else:
-# printing_table(table_list)
-# print(f"SMART results: {smart_counter}")
-# print(f"PFAM results: {pfam_counter}")
-#     print(separator)
-#     printing_table(list_of_multiple_table_list)
-#     print(f"\nThere was {len(result_of_analysis_pfam)} Pfam results vs {len(result_of_analysis_smart)} SMART results.")
-#     print(f"{analysis_used} analysis has been chosen.")
-#
-#     while True:
-#         table_choice = input("Do you want to save this table as ~.csv file? y/n ")
-#         if table_choice == "y":
-#             with open("domains_list%s.csv" % i, "w") as domain_csv:
-#                 for everykey in domains_counter_dict:
-#                     domain_csv.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
-#                 print(f"You can find your results in domains_list%s.csv\n" % i)
-#             break
-#         elif table_choice == "n":
-#             break
-#         else:
-#             print("Strange way to type 'y' or 'n'. Retry.\n")
-#
-#     print("\nWhich domains do you want to save?")
-#     print("- Save all the domains -> 'all'")
-#     print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
-#     print("- None -> 'none' ")
-#     print("DO NOT use space. If you have some doubt, go back to the readme.")
-#
-#     while True:
-#         save_choice_input = input("Write here your choice: ")
-#         save_choice_list = save_choice_input.split(",")
-#         save_choice = save_choice_list[0]
-#
-#         if save_choice == "index":
-#             for everychoice in save_choice_list:
-#                 if everychoice == "index":
-#                     pass
-#                 else:
-#                     domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
-#             break
-#         elif save_choice == "all":
-#             for everychoice in range(0, len(list_of_multiple_table_list)):
-#                 if everychoice == "all":
-#                     pass
-#                 else:
-#                     domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
-#             break
-#         elif save_choice == "none":
-#             break
-#         else:
-#             print("You forgot to add 'index' or 'accession', or made some typos. Retry.\n")
-#
+    while True:
+        table_choice = input("Do you want to save this table as ~.csv file? y/n ")
+        if table_choice == "y":
+            with open("domains_list%s.csv" % i, "w") as domain_csv:
+                for everyrow in table_list:
+                    domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+                print(f"You can find your results in domains_list%s.csv\n" % i)
+            break
+        elif table_choice == "n":
+            break
+        else:
+            print("Strange way to type 'y' or 'n'. Retry.\n")
 
+    print("\nWhich domains do you want to save?")
+    print("- Save all the domains -> 'all'")
+    print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
+    print("- None -> 'none' ")
+    print("DO NOT use space. If you have some doubt, go back to the readme.")
 
+    domain_to_save = []
+
+    while True:
+        save_choice_input = input("Write here your choice: ")
+        save_choice_list = save_choice_input.split(",")
+        save_choice = save_choice_list[0]
+
+        # Da aggiungere eccezione per numeri maggiori dell'index della lista
+        if save_choice == "index":
+            for everychoice in save_choice_list:
+                if everychoice == "index":
+                    pass
+                else:
+                    domain_to_save.append(table_list[int(everychoice)][0])
+            break
+        elif save_choice == "all":
+            for everyelement in table_list:
+                domain_to_save.append(everyelement[0])
+            break
+        elif save_choice == "none":
+            exit()
+        else:
+            print("You forgot to add 'index' or 'accession', or made some typos. Retry.\n")
 
 # # *********************************************************************************************
 # # SAVING THE DOMAINS
@@ -295,53 +284,53 @@ for everyprotein in protein_list:
         protein_sequence = result_dictionary[everyprotein]["Sequence"]
         domain_sequence = protein_sequence[start_location:stop_location]
 
-        name_format_dict = {
-            "1": protein_accession,
-            "2": domain_name,
-            "3": domain_length,
-            "4": ip_accession,
-            "5": start_location,
-            "6": stop_location,
-        }
+        if ip_accession in domain_to_save:
+            name_format_dict = {
+                "1": protein_accession,
+                "2": domain_name,
+                "3": domain_length,
+                "4": ip_accession,
+                "5": start_location,
+                "6": stop_location,
+            }
 
-        # ----> Renaming the sequence following the input
-        if name_format is None:
-            name_format = "1,2,3,4,5,6"
+            # ----> Renaming the sequence following the input
+            if name_format is None:
+                name_format = "1,2,3,4,5,6"
 
-        name_format_choosen = name_format.split(",")
-        name_format_string = ">"
+            name_format_choosen = name_format.split(",")
+            name_format_string = ">"
 
-        for n in name_format_choosen:
-            if n == "1":
-                name_format_string += f" [{name_format_dict[n]}] -"
-            elif n == "2":
-                name_format_string += f" [DOMAIN-NAME: {name_format_dict[n]}] -"
-            elif n == "3":
-                name_format_string += f" [DOMAIN-LENGTH: {name_format_dict[n]}] -"
-            elif n == "4":
-                name_format_string += f" [IP-ACCESSION: {name_format_dict[n]}] -"
-            elif n == "5":
-                name_format_string += f" [START: {name_format_dict[n]}] -"
-            elif n == "6":
-                name_format_string += f" [STOP: {name_format_dict[n]}] -"
+            for n in name_format_choosen:
+                if n == "1":
+                    name_format_string += f" [{name_format_dict[n]}] -"
+                elif n == "2":
+                    name_format_string += f" [DOMAIN-NAME: {name_format_dict[n]}] -"
+                elif n == "3":
+                    name_format_string += f" [DOMAIN-LENGTH: {name_format_dict[n]}] -"
+                elif n == "4":
+                    name_format_string += f" [IP-ACCESSION: {name_format_dict[n]}] -"
+                elif n == "5":
+                    name_format_string += f" [START: {name_format_dict[n]}] -"
+                elif n == "6":
+                    name_format_string += f" [STOP: {name_format_dict[n]}] -"
 
-        sliced_text = slice(len(name_format_string) - 2)
-        name_format_string_final = name_format_string[sliced_text]
+            sliced_text = slice(len(name_format_string) - 2)
+            name_format_string_final = name_format_string[sliced_text]
 
+            # If the output file already exists, append the sequences
+            try:
+                with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                    file_output.write(f"{name_format_string_final}\n")
+                    file_output.write(f"{domain_sequence}\n\n")
 
-        # If the output file already exists, append the sequences
-        try:
-            with open("extracted_domains%s.fasta" % i, "a") as file_output:
-                file_output.write(f"{name_format_string_final}\n")
-                file_output.write(f"{domain_sequence}\n\n")
+            # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
+            except FileNotFoundError:
+                with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                    file_output.write(f"{name_format_string_final}\n")
+                    file_output.write(f"{domain_sequence}\n\n")
 
-        # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
-        except FileNotFoundError:
-            with open("extracted_domains%s.fasta" % i, "w") as file_output:
-                file_output.write(f"{name_format_string_final}\n")
-                file_output.write(f"{domain_sequence}\n\n")
-
-        domain_saved += 1
+            domain_saved += 1
 
 if manual_mode is False:
     print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
