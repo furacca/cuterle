@@ -113,9 +113,9 @@ def create_table_row_list(result_dictionary):
     return table_row_list
 
 
-def printing_table(list_of_multiple_table_list):
+def printing_table(table_list):
     header = ("Accession ID", "Domain name", "Domains' number found")
-    print(tabulate(list_of_multiple_table_list,
+    print(tabulate(table_list,
                    headers=header,
                    tablefmt="grid",
                    colalign=("center", "center", "center"),
