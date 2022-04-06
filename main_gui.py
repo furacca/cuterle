@@ -1,3 +1,5 @@
+import tkinter
+
 from result_dictionary_maker import *
 from functions import *
 from tkinter import filedialog
@@ -56,10 +58,10 @@ def extract_domains():
 
     text_to_print = ""
     for everydomain in TABLE_LIST:
-        new_line = f"{everydomain[0]} {everydomain[1]} {everydomain[2]}\n"
+        new_line = f"{everydomain[0]}\t\t{everydomain[1]}\t\t\t\t\t{everydomain[2]}\n"
         text_to_print += new_line
 
-    l_table.config(text=text_to_print)
+    t_table.insert(END, text_to_print)
 
 
 # ****************************************************
@@ -143,39 +145,28 @@ b_tsv.grid(column=0, row=3)
 b_tsv = Button(center_left_frame, text="Extract the domains", command=extract_domains)
 b_tsv.grid(column=0, row=4)
 
-# Label - Table
-l_table = Label(center_right_frame)
-l_table.config(text="")
-l_table.grid(column=0, row=0)
+
 
 
 
 # Layout all the widgets in the right frame
+# # Label - Table
+# l_table = Label(center_right_frame, height=200, width=300)
+# l_table.config(text="")
+# l_table.grid(column=0, row=0)
 
-
-
-
-
-
-
-#
-# # Label - Logo
-# l_logo = tkinter.Label(frame1)
-# l_logo.config(text="Questo è il logo",
-#               font=(FONT_NAME, 5, "bold"),
-#               width=30)
-# l_logo.grid(column=0, row=0)
-#
-# # Label - tsv
-# l_tsv = tkinter.Label(frame2)
-# l_tsv.config(text="TSV")
-# l_tsv.grid(column=1, row=1)
-#
-# # Button - search tsv
-# b_tsv = tkinter.Button(frame2, text="Browse", command=browse_fasta_file)
-# b_tsv.grid(column=1, row=2)
+# Text - Table
 #
 
-#
+t_table = Text(center_right_frame, height=25, width=75)
+t_table.grid(column=0, row=0)
+
+scball = Scrollbar(center_right_frame, orient="vertical", command=t_table.yview)
+scball.grid(column=1, row=0, sticky="ns")
+
+t_table["yscrollcommand"] = scball.set
+
+
+
 
 main_window.mainloop()
