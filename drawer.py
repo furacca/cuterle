@@ -1,12 +1,10 @@
 import os
 import turtle
 from turtle import Turtle, Screen
-import pandas as pd
-from Bio import SeqIO
 from PIL import Image
 
 
-def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_with_description):
+def sequences_drawer(protein_list, table_list, result_dictionary):
     # Color list
     main_domains_color = ["purple", "red", "violet", "blue", "green", "yellow", "orange", "brown", "cyan"]
     secondary_domains_color = ["gray75"]
@@ -17,56 +15,43 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
     style_text_scale = ("Arial", 20, "italic")
     style_text_segment_scale = ("Arial", 10, "")
 
-    # Count how much protein sequences tehre are in fasta format and create a list of all protein
-    protein_list = []
-    with open(fasta_file, "r") as file:
-        for everyrecord in SeqIO.parse(file, "fasta"):
-            if everyrecord.id in protein_list:
-                pass
-            else:
-                protein_list.append(everyrecord.id)
-    num_prot = 0
-
     # Counter to rename output file when another file with the same name exist
     list_of_file = os.listdir("./")
-    if "03_graphical_output.jpg" in list_of_file:
+    if "domains_view.jpg" in list_of_file:
         z = 1
         while os.path.exists("domains_view%s.jpg" % z):
             z += 1
     else:
         z = 1
 
-    # Assign for every domain (in decrescent order) a fixed color, used in all protein drawn
-    # domains_dict is a dictionary containing {"domain name":number_of_domain_discovered, ~}
-    domains_tuple_ordered = domains_dict.items()
+    item_in_list = len(table_list)
 
-    domains_tuple_ordered = sorted(domains_tuple_ordered, key=lambda zum: zum[1], reverse=True)
-
-    if len(domains_tuple_ordered) < 9:
-        number_of_domains = len(domains_tuple_ordered)
+    if item_in_list < 9:
+        number_of_domains = item_in_list
     else:
         number_of_domains = 9
 
     dict_domain_color = {}
+
     for n in range(0, number_of_domains):
-        dict_domain_color[domains_tuple_ordered[n][0]] = main_domains_color[n]
+        dict_domain_color[table_list[n][1]] = main_domains_color[n]
+
 
     # ***********************************************************************
-    # STARTING THE DRAWING PROCESS - FOR CYCLE FOR TAKE ONE PROTEIN AT TIME
+    # STARTING THE DRAWING PROCESS - FOR CYCLE TAKE ONE PROTEIN AT TIME
     # ***********************************************************************
 
     # For every protein in protein list extract the lines containing analysis_used
     for everyprotein in protein_list:
-        dataframe1 = pd.read_table(tsv_file)
-        df_first_filter = dataframe1.loc[dataframe1["3"] == analysis_used]
-        df_second_filter = df_first_filter.loc[df_first_filter["0"] == everyprotein]
+        domain_counter = 0
+        protein_length = len(result_dictionary[everyprotein]["Sequence"])
 
-        number_of_domains_filtered = int(len(df_second_filter))
-        unsorted_dict_result_filtered = df_second_filter.to_dict("records")
-        dict_result_filtered = sorted(unsorted_dict_result_filtered, key=lambda i: (i["0"], i["6"]), reverse=True)
+        # Counting the domain
+        for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+            domain_counter += 1
 
-        # Check if the protein hasn't ANY domains, skip
-        if number_of_domains_filtered == 0:
+        # If the protein hasn't ANY domains, skip
+        if domain_counter == 0:
             pass
         else:
             screen = Screen()
@@ -85,7 +70,7 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             drawer.hideturtle()
 
             # Scale the length of the protein
-            seq_length = int(dict_result_filtered[0]["2"])
+            seq_length = protein_length
             scale = 1
             if seq_length * 2 < 800:
                 scale = scale * 2
@@ -100,7 +85,7 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             y_point_to_start = -70
 
             # Draw the name of the protein
-            prot_name = dict_result_filtered[0]["0"]
+            prot_name = everyprotein
             drawer.penup()
             drawer.goto(x_point_to_start, 130)
             drawer.pendown()
@@ -190,12 +175,11 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             altitudine = 20
             direction = "+"
 
-            # For every domain filtered we have to do a lot of things
-            for er in range(0, number_of_domains_filtered):
-                # ----> Extracting multiple variable
-                start_location = dict_result_filtered[er]["6"]
-                stop_location = dict_result_filtered[er]["7"]
-                interpro_annotation = dict_result_filtered[er][column_with_description]
+            for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+
+                start_location = everydomain["START"]
+                stop_location = everydomain["STOP"]
+                interpro_annotation = everydomain["DOMAIN_NAME"]
                 interpro_annotation_mod = interpro_annotation.upper()
 
                 # Stop/start/domain dimension scaled
@@ -203,7 +187,7 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
                 scalated_stop_location = int(stop_location * scale)
                 scalated_domain_length = scalated_stop_location - scalated_start_location
 
-                # Choose the color for the domain
+                # # Choose the color for the domain
                 if interpro_annotation in dict_domain_color.keys():
                     color_choosen = dict_domain_color[interpro_annotation]
                 else:
@@ -244,7 +228,7 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
                 drawer.pendown()
                 drawer.pensize(10)
                 drawer.pencolor("white")
-                length_name = int(len(interpro_annotation)*4.7)
+                length_name = int(len(interpro_annotation) * 4.7)
                 drawer.forward(length_name)
                 drawer.penup()
 
@@ -308,6 +292,3 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
 
         # Increase the counter for the images' name
         z += 1
-
-        # Increase the counter to pass to the next protein
-        num_prot += 1

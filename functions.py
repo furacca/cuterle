@@ -74,7 +74,7 @@ def seq_in_fastafile_count(fasta_file):
         return seq_counter
 
 
-def create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file):
+def create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file, domain_order):
     temporary_dictionary = {}
     for everyprotein in protein_list:
         # Reset the domain counter
@@ -124,10 +124,15 @@ def create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_fi
                 if record.id == everyprotein:
                     protein_sequence = f"{record.seq}"
 
+        if domain_order == "Increasing":
+            reverse_value = False
+        elif domain_order == "Decreasing":
+            reverse_value = True
+
         # Result_of_analysis is a pandas dataframe
         # Sorting the list the dict by the START (found at index 6)
         unsorted_dict_result_filtered = result_of_analysis.to_dict("records")
-        dict_result_filtered = sorted(unsorted_dict_result_filtered, key=lambda z: z["6"], reverse=False)
+        dict_result_filtered = sorted(unsorted_dict_result_filtered, key=lambda z: z["6"], reverse=reverse_value)
 
         # Set the right column to use
         column_with_description = ""

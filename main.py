@@ -3,7 +3,6 @@ from drawer import *
 from asciithing import *
 from Bio import SeqIO
 import pandas as pd
-import os
 import argparse
 import textwrap
 
@@ -92,17 +91,17 @@ cuterle_parser.add_argument("-draw_image",
 cuterle_options = cuterle_parser.parse_args()
 
 manual_mode = cuterle_options.m
-tsv_file = cuterle_options.tsv
-fasta_file = cuterle_options.fasta
+# tsv_file = cuterle_options.tsv
+# fasta_file = cuterle_options.fasta
 prior_choice = cuterle_options.a
 name_format = cuterle_options.nf
 accession = cuterle_options.accession
 table_choice = cuterle_options.savetable
 draw_choice = cuterle_options.draw_image
-
-# *********************************************************************************************
-# *********************************************************************************************
-
+#
+# # *********************************************************************************************
+# # *********************************************************************************************
+#
 # # Get tsv file as input - The while loop checks the existences of the input tsv file
 # if manual_mode and existence_file_check(tsv_file, "*.tsv"):
 #     pass
@@ -153,14 +152,17 @@ draw_choice = cuterle_options.draw_image
 #         else:
 #             print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
 #             pass
+# -----------------------------------------------------------------------------------
 
+# fasta_file = "1756_seq.fasta"
+# tsv_file = "1756_seq.tsv"
+
+fasta_file = "a.fasta"
+tsv_file = "a.tsv"
 
 # The "i" set the same number-counter for all output file (extracted_files, table, log, ecc),
 # avoiding overwrite some file previously created
 i = i_counter()
-
-tsv_file = "a.tsv"
-fasta_file = "a.fasta"
 
 # Checks (and eventually add) if the tsv file already has columns' name (0, 1, 2, 3, ...)
 check_column_name(tsv_file)
@@ -178,8 +180,10 @@ with open(fasta_file, "r") as file:
 dataframe_tsv = pd.read_table(tsv_file)
 
 # Create results_dictionary
-result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file)
+domain_order = "Increasing"
+result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file, domain_order)
 
+print(result_dictionary)
 # Count how many result for each analysis have been found
 smart_counter = 0
 pfam_counter = 0
@@ -219,31 +223,34 @@ if manual_mode:
 else:
     print(separator)
     printing_table(table_list)
-    print(f"{smart_plus_pfam} domains have been found: {pfam_counter} by Pfam and {smart_counter} by SMART.")
-
-    while True:
-        table_choice = input("Do you want to save this table as ~.csv file? y/n ")
-        if table_choice == "y":
-            with open("domains_list%s.csv" % i, "w") as domain_csv:
-                for everyrow in table_list:
-                    domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
-                print(f"You can find your results in domains_list%s.csv\n" % i)
-            break
-        elif table_choice == "n":
-            break
-        else:
-            print("Strange way to type 'y' or 'n'. Retry.\n")
-
-    print("\nWhich domains do you want to save?")
-    print("- Save all the domains -> 'all'")
-    print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
-    print("- None -> 'none' ")
-    print("DO NOT use space. If you have some doubt, go back to the readme.")
+    # print(f"{smart_plus_pfam} domains have been found: {pfam_counter} by Pfam and {smart_counter} by SMART.")
+    #
+    # while True:
+    #     table_choice = input("Do you want to save this table as ~.csv file? y/n ")
+    #     if table_choice == "y":
+    #         with open("domains_list%s.csv" % i, "w") as domain_csv:
+    #             for everyrow in table_list:
+    #                 domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+    #             print(f"You can find your results in domains_list%s.csv\n" % i)
+    #         break
+    #     elif table_choice == "n":
+    #         break
+    #     else:
+    #         print("Strange way to type 'y' or 'n'. Retry.\n")
+    #
+    # print("\nWhich domains do you want to save?")
+    # print("- Save all the domains -> 'all'")
+    # print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
+    # print("- None -> 'none' ")
+    # print("DO NOT use space. If you have some doubt, go back to the readme.")
 
     domain_to_save = []
 
+    # DA ELIMNARE
+    save_choice_input = "all"
+
     while True:
-        save_choice_input = input("Write here your choice: ")
+        # save_choice_input = input("Write here your choice: ")
         save_choice_list = save_choice_input.split(",")
         save_choice = save_choice_list[0]
 
@@ -334,41 +341,51 @@ for everyprotein in protein_list:
 
 if manual_mode is False:
     print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
-#
+
 # # *********************************************************************************************
 # # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)
 # # *********************************************************************************************
-# if manual_mode:
-#     if draw_choice:
-#         sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
-# else:
-#     print(separator)
-#     while True:
-#         wanna_draw = input(f"Are you interested in create a new file.image for EACH sequence in {fasta_file}? y/n ")
-#         if wanna_draw == "y" and seq_in_fastafile_count(fasta_file) > 5:
-#             print("\n# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #")
-#             print(f"WARNING! In the {fasta_file} there are more than 5 sequences")
-#             print("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #")
-#             while True:
-#                 choice = input("\nAre you sure to continue? y/n ")
-#                 if choice == "y":
-#                     sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
-#                     break
-#                 elif choice == "n":
-#                     break
-#                 else:
-#                     print("Strange way to type 'y' or 'n'. Retry.\n")
-#             break
-#         elif wanna_draw == "y":
-#             sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
-#             break
-#         elif wanna_draw == "n":
-#             break
-#         else:
-#             print("Strange way to type 'y' or 'n'. Retry.\n")
-#
-#     print(separator)
-#
+if manual_mode:
+    if draw_choice:
+        domain_order = "Increasing"
+        result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                                                     domain_order)
+        sequences_drawer(protein_list, result_dictionary)
+else:
+    print(separator)
+    while True:
+        # wanna_draw = input(f"Are you interested in create a new file.image for EACH sequence in {fasta_file}? y/n ")
+        wanna_draw  = "y"
+        if wanna_draw == "y" and seq_in_fastafile_count(fasta_file) > 5:
+            print("\n# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #")
+            print(f"WARNING! In the {fasta_file} there are more than 5 sequences")
+            print("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #")
+            while True:
+                choice = input("\nAre you sure to continue? y/n ")
+                if choice == "y":
+                    domain_order = "Decreasing"
+                    result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                                                                 domain_order)
+                    sequences_drawer(protein_list, table_list, result_dictionary)
+                    break
+                elif choice == "n":
+                    break
+                else:
+                    print("Strange way to type 'y' or 'n'. Retry.\n")
+            break
+        elif wanna_draw == "y":
+            domain_order = "Decreasing"
+            result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                                                         domain_order)
+            sequences_drawer(protein_list, table_list, result_dictionary)
+            break
+        elif wanna_draw == "n":
+            break
+        else:
+            print("Strange way to type 'y' or 'n'. Retry.\n")
+
+    print(separator)
+
 # *********************************************************************************************
 # BYE MESSAGE
 # *********************************************************************************************
@@ -377,3 +394,4 @@ if manual_mode is False:
 # else:
 #     print("Have a productive day!")
 #     print(separator)
+
