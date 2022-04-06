@@ -2,7 +2,6 @@ from functions import *
 from result_dictionary_maker import *
 from drawer import *
 from asciithing import *
-from Bio import SeqIO
 import pandas as pd
 import argparse
 import textwrap
@@ -337,8 +336,9 @@ if manual_mode:
     if draw_choice:
         domain_order = "Increasing"
         result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
-                                                     domain_order)
-        sequences_drawer(protein_list, result_dictionary)
+                                                    domain_order)
+
+        sequences_drawer(protein_list, table_list, result_dictionary)
 else:
     print(separator)
     while True:
@@ -352,7 +352,7 @@ else:
                 if choice == "y":
                     domain_order = "Decreasing"
                     result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
-                                                                 domain_order)
+                                                                domain_order)
                     sequences_drawer(protein_list, table_list, result_dictionary)
                     break
                 elif choice == "n":
@@ -363,7 +363,7 @@ else:
         elif wanna_draw == "y":
             domain_order = "Decreasing"
             result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
-                                                         domain_order)
+                                                        domain_order)
             sequences_drawer(protein_list, table_list, result_dictionary)
             break
         elif wanna_draw == "n":
@@ -381,4 +381,3 @@ if manual_mode:
 else:
     print("Have a productive day!")
     print(separator)
-

@@ -92,7 +92,6 @@ def result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_fil
 
             extracted_domain.append(name_format_dict)
 
-
         temporary_dictionary[everyprotein] = {
             "Domains_found": domain_counter,
             "Analysis_used": analysis_used,
@@ -101,31 +100,3 @@ def result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_fil
         }
 
     return temporary_dictionary
-
-
-def create_table_row_list(result_dictionary):
-    # Create a list containing all the row printed by the table
-    table_row_list = []
-    domain_count_dict = {}
-    interpro_accession = {}
-
-    for everyrecord in result_dictionary:
-        for n in result_dictionary[everyrecord]["Extracted_domains"]:
-            domain_name = n["DOMAIN_NAME"]
-            ip_accession = n["IP_ACCESSION"]
-            if domain_name in domain_count_dict:
-                domain_count_dict[domain_name] += 1
-            else:
-                domain_count_dict[domain_name] = 1
-            if ip_accession in interpro_accession:
-                pass
-            else:
-                interpro_accession[domain_name] = ip_accession
-
-    for everydomain in interpro_accession:
-        temporary_list = [interpro_accession[everydomain], everydomain, domain_count_dict[everydomain]]
-        table_row_list.append(temporary_list)
-
-    table_row_list = sorted(table_row_list, key=lambda item: item[2], reverse=True)
-
-    return table_row_list
