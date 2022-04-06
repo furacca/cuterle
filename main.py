@@ -91,74 +91,67 @@ cuterle_parser.add_argument("-draw_image",
 cuterle_options = cuterle_parser.parse_args()
 
 manual_mode = cuterle_options.m
-# tsv_file = cuterle_options.tsv
-# fasta_file = cuterle_options.fasta
+tsv_file = cuterle_options.tsv
+fasta_file = cuterle_options.fasta
 prior_choice = cuterle_options.a
 name_format = cuterle_options.nf
 accession = cuterle_options.accession
 table_choice = cuterle_options.savetable
 draw_choice = cuterle_options.draw_image
-#
-# # *********************************************************************************************
-# # *********************************************************************************************
-#
-# # Get tsv file as input - The while loop checks the existences of the input tsv file
-# if manual_mode and existence_file_check(tsv_file, "*.tsv"):
-#     pass
-# elif manual_mode and tsv_file is None:
-#     print(f"You have not selected any tsv file!")
-#     exit()
-# elif manual_mode:
-#     print(f"{tsv_file} doesn't exist or doesn't has the correct format!")
-#     exit()
-# elif manual_mode is False:
-#     print(logo)
-#     print(separator)
-#     print("Welcome, this is CUTERLE, \n"
-#           "a bioinformatic tool which return an output file containing every domain annotated by InterProScan\n"
-#           "via Pfam or SMART analysis from the list of protein submitted.")
-#     print(separator)
-#     print("The first file requested is the one with ~.tsv extension which contains the domains coordinates.")
-#     print("In the current folder you have the following *.tsv files:")
-#     print_file_in_the_folder("*.tsv")
-#
-#     while True:
-#         tsv_file = input("Type the file name using this format -> file.tsv : ")
-#         if existence_file_check(tsv_file, "*.tsv"):
-#             break
-#         else:
-#             print(f"{tsv_file} doesn't exist or doesn't has .tsv extension. Retry.")
-#             pass
-#
-# # Get fasta file as input - The while loop checks the existences of the input fasta file
-# if manual_mode and existence_file_check(tsv_file, "*.fasta"):
-#     pass
-# elif manual_mode and fasta_file is None:
-#     print(f"You have not selected any fasta file!")
-#     exit()
-# elif manual_mode:
-#     print(f"{fasta_file} doesn't exist or doesn't has the correct format!")
-#     exit()
-# else:
-#     print(separator)
-#     print("The second file requested is the one with ~.fasta extension which contains the sequence list.")
-#     print("Remember to use THE SAME fasta file used to get the tsv one.")
-#     print("In the current folder you have the following *.fasta files:")
-#     print_file_in_the_folder("*.fasta")
-#     while True:
-#         fasta_file = input("Type the file name using this format -> file.fasta : ")
-#         if existence_file_check(fasta_file, "*.fasta"):
-#             break
-#         else:
-#             print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
-#             pass
-# -----------------------------------------------------------------------------------
 
-# fasta_file = "1756_seq.fasta"
-# tsv_file = "1756_seq.tsv"
+# *********************************************************************************************
+# *********************************************************************************************
 
-fasta_file = "a.fasta"
-tsv_file = "a.tsv"
+# Get tsv file as input - The while loop checks the existences of the input tsv file
+if manual_mode and existence_file_check(tsv_file, "*.tsv"):
+    pass
+elif manual_mode and tsv_file is None:
+    print(f"You have not selected any tsv file!")
+    exit()
+elif manual_mode:
+    print(f"{tsv_file} doesn't exist or doesn't has the correct format!")
+    exit()
+elif manual_mode is False:
+    print(logo)
+    print(separator)
+    print("Welcome, this is CUTERLE, \n"
+          "a bioinformatic tool which return an output file containing every domain annotated by InterProScan\n"
+          "via Pfam or SMART analysis from the list of protein submitted.")
+    print(separator)
+    print("The first file requested is the one with ~.tsv extension which contains the domains coordinates.")
+    print("In the current folder you have the following *.tsv files:")
+    print_file_in_the_folder("*.tsv")
+
+    while True:
+        tsv_file = input("Type the file name using this format -> file.tsv : ")
+        if existence_file_check(tsv_file, "*.tsv"):
+            break
+        else:
+            print(f"{tsv_file} doesn't exist or doesn't has .tsv extension. Retry.")
+            pass
+
+# Get fasta file as input - The while loop checks the existences of the input fasta file
+if manual_mode and existence_file_check(tsv_file, "*.fasta"):
+    pass
+elif manual_mode and fasta_file is None:
+    print(f"You have not selected any fasta file!")
+    exit()
+elif manual_mode:
+    print(f"{fasta_file} doesn't exist or doesn't has the correct format!")
+    exit()
+else:
+    print(separator)
+    print("The second file requested is the one with ~.fasta extension which contains the sequence list.")
+    print("Remember to use THE SAME fasta file used to get the tsv one.")
+    print("In the current folder you have the following *.fasta files:")
+    print_file_in_the_folder("*.fasta")
+    while True:
+        fasta_file = input("Type the file name using this format -> file.fasta : ")
+        if existence_file_check(fasta_file, "*.fasta"):
+            break
+        else:
+            print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
+            pass
 
 # The "i" set the same number-counter for all output file (extracted_files, table, log, ecc),
 # avoiding overwrite some file previously created
@@ -223,26 +216,26 @@ if manual_mode:
 else:
     print(separator)
     printing_table(table_list)
-    # print(f"{smart_plus_pfam} domains have been found: {pfam_counter} by Pfam and {smart_counter} by SMART.")
-    #
-    # while True:
-    #     table_choice = input("Do you want to save this table as ~.csv file? y/n ")
-    #     if table_choice == "y":
-    #         with open("domains_list%s.csv" % i, "w") as domain_csv:
-    #             for everyrow in table_list:
-    #                 domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
-    #             print(f"You can find your results in domains_list%s.csv\n" % i)
-    #         break
-    #     elif table_choice == "n":
-    #         break
-    #     else:
-    #         print("Strange way to type 'y' or 'n'. Retry.\n")
-    #
-    # print("\nWhich domains do you want to save?")
-    # print("- Save all the domains -> 'all'")
-    # print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
-    # print("- None -> 'none' ")
-    # print("DO NOT use space. If you have some doubt, go back to the readme.")
+    print(f"{smart_plus_pfam} domains have been found: {pfam_counter} by Pfam and {smart_counter} by SMART.")
+
+    while True:
+        table_choice = input("Do you want to save this table as ~.csv file? y/n ")
+        if table_choice == "y":
+            with open("domains_list%s.csv" % i, "w") as domain_csv:
+                for everyrow in table_list:
+                    domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+                print(f"You can find your results in domains_list%s.csv\n" % i)
+            break
+        elif table_choice == "n":
+            break
+        else:
+            print("Strange way to type 'y' or 'n'. Retry.\n")
+
+    print("\nWhich domains do you want to save?")
+    print("- Save all the domains -> 'all'")
+    print("- Choose by index -> e.g. single 'index,1' or multiple 'index,1,3,4'")
+    print("- None -> 'none' ")
+    print("DO NOT use space. If you have some doubt, go back to the readme.")
 
     domain_to_save = []
 
@@ -354,8 +347,7 @@ if manual_mode:
 else:
     print(separator)
     while True:
-        # wanna_draw = input(f"Are you interested in create a new file.image for EACH sequence in {fasta_file}? y/n ")
-        wanna_draw  = "y"
+        wanna_draw = input(f"Are you interested in create a new file.image for EACH sequence in {fasta_file}? y/n ")
         if wanna_draw == "y" and seq_in_fastafile_count(fasta_file) > 5:
             print("\n# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #")
             print(f"WARNING! In the {fasta_file} there are more than 5 sequences")
@@ -389,9 +381,9 @@ else:
 # *********************************************************************************************
 # BYE MESSAGE
 # *********************************************************************************************
-# if manual_mode:
-#     pass
-# else:
-#     print("Have a productive day!")
-#     print(separator)
+if manual_mode:
+    pass
+else:
+    print("Have a productive day!")
+    print(separator)
 
