@@ -1,4 +1,5 @@
 from functions import *
+from result_dictionary_maker import *
 from drawer import *
 from asciithing import *
 from Bio import SeqIO
@@ -161,20 +162,14 @@ i = i_counter()
 check_column_name(tsv_file)
 
 # Create a list which contains every protein name
-protein_list = []
-with open(fasta_file, "r") as file:
-    for everyrecord in SeqIO.parse(file, "fasta"):
-        if everyrecord.id in protein_list:
-            pass
-        else:
-            protein_list.append(everyrecord.id)
+protein_list = protein_list_maker(fasta_file)
 
 # Create with pandas a new dataframe
 dataframe_tsv = pd.read_table(tsv_file)
 
 # Create results_dictionary
 domain_order = "Increasing"
-result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file, domain_order)
+result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file, domain_order)
 
 print(result_dictionary)
 # Count how many result for each analysis have been found
@@ -341,7 +336,7 @@ if manual_mode is False:
 if manual_mode:
     if draw_choice:
         domain_order = "Increasing"
-        result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file,
+        result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                      domain_order)
         sequences_drawer(protein_list, result_dictionary)
 else:
@@ -356,7 +351,7 @@ else:
                 choice = input("\nAre you sure to continue? y/n ")
                 if choice == "y":
                     domain_order = "Decreasing"
-                    result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                    result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                                  domain_order)
                     sequences_drawer(protein_list, table_list, result_dictionary)
                     break
@@ -367,7 +362,7 @@ else:
             break
         elif wanna_draw == "y":
             domain_order = "Decreasing"
-            result_dictionary = create_result_dictionary(protein_list, dataframe_tsv, prior_choice, fasta_file,
+            result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                          domain_order)
             sequences_drawer(protein_list, table_list, result_dictionary)
             break
