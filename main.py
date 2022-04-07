@@ -170,7 +170,6 @@ dataframe_tsv = pd.read_table(tsv_file)
 domain_order = "Increasing"
 result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file, domain_order)
 
-print(result_dictionary)
 # Count how many result for each analysis have been found
 smart_counter = 0
 pfam_counter = 0

@@ -1,9 +1,29 @@
 from result_dictionary_maker import *
 from functions import *
 from tkinter import filedialog
+from tkinter import messagebox
+from tkinter import ttk
 from tkinter import *
 from PIL import ImageTk, Image
 import pandas as pd
+
+# Cuterle - Palette - RGB
+#
+# white
+# (249, 245, 247)
+# #f9f5f7
+#
+# white-lightblue
+# (219, 226, 239)
+# #dbe2ef
+#
+# lightblue
+# (63, 113, 175)
+# #3f71af
+#
+# blu
+# (17, 48, 78)
+# #11304e
 
 
 def browse_fasta_file():
@@ -49,7 +69,6 @@ def extract_domains():
     global TSV_FILE
     global RESULT_DICTIONARY
     global TABLE_LIST
-    global EXTRACTION_OK
 
     check_column_name(TSV_FILE)
     protein_list = protein_list_maker(FASTA_FILE)
@@ -67,10 +86,17 @@ def extract_domains():
         new_line = f"{everydomain[0]}\t\t{everydomain[1]}\t\t\t\t\t{everydomain[2]}\n"
         text_to_print += new_line
 
-    t_table.insert(END, text_to_print)
+    # t_table.insert(END, text_to_print)
 
     if len(TABLE_LIST) > 0:
         b_save_extracted_domains.config(state=NORMAL)
+
+    domains = []
+    for everyrow in TABLE_LIST:
+        domains.append((f"{everyrow[0]}", f"{everyrow[1]}", f"{everyrow[2]}"))
+
+    for everydomain in domains:
+        t_table.insert("", END, values=everydomain)
 
 
 def save_extracted_domains():
@@ -85,7 +111,7 @@ def save_extracted_domains():
         for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
             protein_accession = everyprotein
             domain_name = everydomain["DOMAIN_NAME"]
-            domain_order = everydomain["DOMAIN_ORDER"]
+            # domain_order = everydomain["DOMAIN_ORDER"]
             start_location = everydomain["START"]
             stop_location = everydomain["STOP"]
             domain_length = everydomain["LENGTH"]
@@ -136,7 +162,7 @@ def save_extracted_domains():
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
-            print("Saved!")
+    messagebox.showinfo(title="InfoBox", message=f"Extracted sequences saved as\nextracted_domains{i}.fasta")
 
 
 def reset_all():
@@ -151,7 +177,8 @@ def reset_all():
     l_tsv.config(text="Select a tsv file")
     TABLE_LIST = []
     RESULT_DICTIONARY = {}
-    t_table.delete(1.0, END)
+
+    t_table.delete(*t_table.get_children())
 
 
 # ****************************************************
@@ -173,7 +200,7 @@ main_window.geometry("{}x{}".format(1000, 800))
 # Create all the main containers
 # ****************************************************
 top_frame = Frame(main_window, bg="white", width=1000, height=150)
-center_framecomp = Frame(main_window, bg="red", width=1000, height=650, pady=3)
+center_framecomp = Frame(main_window, bg="white", width=1000, height=650, pady=0)
 
 # ****************************************************
 # Layout all the main containers
@@ -207,63 +234,81 @@ logo_label.grid()
 center_framecomp.grid_rowconfigure(0, weight=1)
 center_framecomp.grid_columnconfigure(1, weight=1)
 
-center_right_frame = Frame(center_framecomp, bg='blue', width=100, height=190)
-center_left_frame = Frame(center_framecomp, bg='yellow', width=400, height=190, padx=3, pady=3)
+center_right_frame = Frame(center_framecomp, bg='white', width=100, height=190)
+center_left_frame = Frame(center_framecomp, bg='white', width=400, height=190, padx=3, pady=3)
 
-center_right_frame.grid(row=0, column=1, sticky="nsew")
-center_left_frame.grid(row=0, column=0, sticky="ns")
+center_right_frame.grid(row=0, column=1, sticky="")
+center_left_frame.grid(row=0, column=0, sticky="")
 
 
 # Label - fasta
 l_fasta = Label(center_left_frame)
-l_fasta.config(text="Select a fasta file")
-l_fasta.grid(column=0, row=0)
+l_fasta.config(text="Select a fasta file", bg="white")
+l_fasta.grid(column=0, row=0, pady=5)
 
 # Button - search fasta
 b_fasta = Button(center_left_frame,
                  text="Browse",
                  command=browse_fasta_file)
-b_fasta.grid(column=0, row=1)
+b_fasta.grid(column=0, row=1, pady=5)
+
 
 # Label - tsv
 l_tsv = Label(center_left_frame)
-l_tsv.config(text="Select a tsv file")
-l_tsv.grid(column=0, row=2)
+l_tsv.config(text="Select a tsv file", bg="white")
+l_tsv.grid(column=0, row=2, pady=5)
 
 # Button - search tsv
 b_tsv = Button(center_left_frame,
                text="Browse",
                command=browse_tsv_file)
-b_tsv.grid(column=0, row=3)
+b_tsv.grid(column=0, row=3, pady=5)
 
 # Button - Extract the domain
 b_extract_domain = Button(center_left_frame,
                           text="Extract the domains",
                           command=extract_domains,
                           state=DISABLED)
-b_extract_domain.grid(column=0, row=4)
+b_extract_domain.grid(column=0, row=4, pady=5)
 
 # Button - Save the extracted domain
 b_save_extracted_domains = Button(center_left_frame,
                                   text="Save extracted domains",
                                   command=save_extracted_domains,
                                   state=DISABLED)
-b_save_extracted_domains.grid(column=0, row=5)
+b_save_extracted_domains.grid(column=0, row=5, pady=5)
 
 # Button - Reset
 b_reset = Button(center_left_frame, text="Reset", command=reset_all)
-b_reset.grid(column=0, row=6)
+b_reset.grid(column=0, row=6, pady=5)
 
 # Layout all the widgets in the right frame
 
 # # Label - Table
-t_table = Text(center_right_frame, height=25, width=75)
-t_table.grid(column=0, row=0)
+# t_table = Text(center_right_frame, height=28, width=70)
+# t_table.grid(column=0, row=0, sticky="")
+#
+# scball = Scrollbar(center_right_frame, orient="vertical", command=t_table.yview)
+# scball.grid(column=1, row=0, sticky="ns")
+#
+# t_table["yscrollcommand"] = scball.set
 
-scball = Scrollbar(center_right_frame, orient="vertical", command=t_table.yview)
-scball.grid(column=1, row=0, sticky="ns")
 
-t_table["yscrollcommand"] = scball.set
+# Tree - table
+columns = ("IP_accession", "Domain_name", "Domain_counter")
+
+t_table = ttk.Treeview(center_right_frame, height=28, columns=columns, show="headings")
+t_table.heading("IP_accession", text="IP Accession")
+t_table.column("IP_accession", width=140, stretch=NO)
+t_table.heading("Domain_name", text="Domain name")
+t_table.column("Domain_name", width=400, stretch=NO)
+t_table.heading("Domain_counter", text="Domain counter")
+t_table.column("Domain_counter", width=160, stretch=NO)
+t_table.grid(column=0, row=0, sticky="nsew")
+
+scrollbar = ttk.Scrollbar(center_right_frame, orient=VERTICAL, command=t_table.yview)
+t_table["yscrollcommand"] = scrollbar.set
+scrollbar.grid(column=1, row=0, sticky="ns")
 
 
 main_window.mainloop()
