@@ -1,5 +1,3 @@
-import tkinter
-
 from result_dictionary_maker import *
 from functions import *
 from tkinter import filedialog
@@ -18,10 +16,13 @@ def browse_fasta_file():
     temp_list = filename.split("/")
     tempo_list_length = len(temp_list)
     filename_mod = temp_list[tempo_list_length-1]
-    l_fasta.configure(text="File opened: \n" + filename_mod)
+    l_fasta.configure(text=filename_mod)
 
     global FASTA_FILE
     FASTA_FILE = filename_mod
+
+    if FASTA_FILE != "" and TSV_FILE != "":
+        b_extract_domain.config(state=NORMAL)
 
 
 def browse_tsv_file():
@@ -34,10 +35,13 @@ def browse_tsv_file():
     temp_list = filename.split("/")
     tempo_list_length = len(temp_list)
     filename_mod = temp_list[tempo_list_length-1]
-    l_tsv.configure(text="File opened: \n" + filename_mod)
+    l_tsv.configure(text=filename_mod)
 
     global TSV_FILE
     TSV_FILE = filename_mod
+
+    if FASTA_FILE != "" and TSV_FILE != "":
+        b_extract_domain.config(state=NORMAL)
 
 
 def extract_domains():
@@ -45,7 +49,9 @@ def extract_domains():
     global TSV_FILE
     global RESULT_DICTIONARY
     global TABLE_LIST
+    global EXTRACTION_OK
 
+    check_column_name(TSV_FILE)
     protein_list = protein_list_maker(FASTA_FILE)
     dataframe_tsv = pd.read_table(TSV_FILE)
     prior_choice = ""
@@ -63,6 +69,90 @@ def extract_domains():
 
     t_table.insert(END, text_to_print)
 
+    if len(TABLE_LIST) > 0:
+        b_save_extracted_domains.config(state=NORMAL)
+
+
+def save_extracted_domains():
+    global RESULT_DICTIONARY
+    result_dictionary = RESULT_DICTIONARY
+
+    protein_list = protein_list_maker(FASTA_FILE)
+
+    i = i_counter()
+
+    for everyprotein in protein_list:
+        for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+            protein_accession = everyprotein
+            domain_name = everydomain["DOMAIN_NAME"]
+            domain_order = everydomain["DOMAIN_ORDER"]
+            start_location = everydomain["START"]
+            stop_location = everydomain["STOP"]
+            domain_length = everydomain["LENGTH"]
+            ip_accession = everydomain["IP_ACCESSION"]
+            protein_sequence = result_dictionary[everyprotein]["Sequence"]
+            domain_sequence = protein_sequence[start_location:stop_location]
+
+            name_format_dict = {
+                    "1": protein_accession,
+                    "2": domain_name,
+                    "3": domain_length,
+                    "4": ip_accession,
+                    "5": start_location,
+                    "6": stop_location,
+                }
+
+            name_format = "1,2,3,4,5,6"
+
+            name_format_choosen = name_format.split(",")
+            name_format_string = ">"
+
+            for n in name_format_choosen:
+                if n == "1":
+                    name_format_string += f" [{name_format_dict[n]}] -"
+                elif n == "2":
+                    name_format_string += f" [DOMAIN-NAME: {name_format_dict[n]}] -"
+                elif n == "3":
+                    name_format_string += f" [DOMAIN-LENGTH: {name_format_dict[n]}] -"
+                elif n == "4":
+                    name_format_string += f" [IP-ACCESSION: {name_format_dict[n]}] -"
+                elif n == "5":
+                    name_format_string += f" [START: {name_format_dict[n]}] -"
+                elif n == "6":
+                    name_format_string += f" [STOP: {name_format_dict[n]}] -"
+
+            sliced_text = slice(len(name_format_string) - 2)
+            name_format_string_final = name_format_string[sliced_text]
+
+            # If the output file already exists, append the sequences
+            try:
+                with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                    file_output.write(f"{name_format_string_final}\n")
+                    file_output.write(f"{domain_sequence}\n\n")
+
+            # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
+            except FileNotFoundError:
+                with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                    file_output.write(f"{name_format_string_final}\n")
+                    file_output.write(f"{domain_sequence}\n\n")
+
+            print("Saved!")
+
+
+def reset_all():
+    global FASTA_FILE
+    global TSV_FILE
+    global RESULT_DICTIONARY
+    global TABLE_LIST
+
+    FASTA_FILE = ""
+    l_fasta.config(text="Select a fasta file")
+    TSV_FILE = ""
+    l_tsv.config(text="Select a tsv file")
+    TABLE_LIST = []
+    RESULT_DICTIONARY = {}
+    t_table.delete(1.0, END)
+
 
 # ****************************************************
 # Global variable
@@ -72,6 +162,7 @@ TSV_FILE = ""
 FASTA_FILE = ""
 RESULT_DICTIONARY = {}
 TABLE_LIST = []
+
 # ****************************************************
 # Create the window
 main_window = Tk()
@@ -129,35 +220,43 @@ l_fasta.config(text="Select a fasta file")
 l_fasta.grid(column=0, row=0)
 
 # Button - search fasta
-b_fasta = Button(center_left_frame, text="Browse", command=browse_fasta_file)
+b_fasta = Button(center_left_frame,
+                 text="Browse",
+                 command=browse_fasta_file)
 b_fasta.grid(column=0, row=1)
 
 # Label - tsv
 l_tsv = Label(center_left_frame)
-l_tsv.config(text="Select a fasta file")
+l_tsv.config(text="Select a tsv file")
 l_tsv.grid(column=0, row=2)
 
 # Button - search tsv
-b_tsv = Button(center_left_frame, text="Browse", command=browse_tsv_file)
+b_tsv = Button(center_left_frame,
+               text="Browse",
+               command=browse_tsv_file)
 b_tsv.grid(column=0, row=3)
 
 # Button - Extract the domain
-b_tsv = Button(center_left_frame, text="Extract the domains", command=extract_domains)
-b_tsv.grid(column=0, row=4)
+b_extract_domain = Button(center_left_frame,
+                          text="Extract the domains",
+                          command=extract_domains,
+                          state=DISABLED)
+b_extract_domain.grid(column=0, row=4)
 
+# Button - Save the extracted domain
+b_save_extracted_domains = Button(center_left_frame,
+                                  text="Save extracted domains",
+                                  command=save_extracted_domains,
+                                  state=DISABLED)
+b_save_extracted_domains.grid(column=0, row=5)
 
-
-
+# Button - Reset
+b_reset = Button(center_left_frame, text="Reset", command=reset_all)
+b_reset.grid(column=0, row=6)
 
 # Layout all the widgets in the right frame
+
 # # Label - Table
-# l_table = Label(center_right_frame, height=200, width=300)
-# l_table.config(text="")
-# l_table.grid(column=0, row=0)
-
-# Text - Table
-#
-
 t_table = Text(center_right_frame, height=25, width=75)
 t_table.grid(column=0, row=0)
 
@@ -165,8 +264,6 @@ scball = Scrollbar(center_right_frame, orient="vertical", command=t_table.yview)
 scball.grid(column=1, row=0, sticky="ns")
 
 t_table["yscrollcommand"] = scball.set
-
-
 
 
 main_window.mainloop()
