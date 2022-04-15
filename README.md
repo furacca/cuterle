@@ -1,15 +1,18 @@
 <p align="center"><img src="./screenshots/00_logo.png"></p>
 
 # Cuterle
-Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) via Pfam or SMART analysis from the list of protein (`~.fasta file`) submitted.
+Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) 
+containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) 
+from the list of protein (`~.fasta file`) submitted.
 
-This program use two main analysis of InterPro (<a href="https://interproscan-docs.readthedocs.io/en/latest/HowToRun.html#included-analyses">here</a> the others):
+Cuterle uses two main analysis of InterPro (there are also <a href="https://interproscan-docs.readthedocs.io/en/latest/HowToRun.html#included-analyses">others analysis</a>):
 - Pfam (XX.X) : A large collection of protein families, each represented by multiple sequence alignments and hidden Markov models (HMMs)
 - SMART (X.X) : SMART allows the identification and analysis of domain architectures based on Hidden Markov Models or HMMs
 
-The choice between these two are based on which one has more results in ~.tsv file.
+Cuterle chooses **for every protein** the analysis with more results in ~.tsv file.
 <br>
 <br>
+
 **Index**
 - [Suggested use](#suggested-use)<br>
 - [Limitations](#limitations)<br>
@@ -17,34 +20,34 @@ The choice between these two are based on which one has more results in ~.tsv fi
 - [Usage - Manual mode](#usage---manual-mode)<br>
 - [Examples manual mode syntax](#examples-manual-mode-syntax)<br>
 - [Usage - Assisted mode](#usage---assisted-mode)<br>
+- [Usage - Graphical mode](#usage---graphical-mode)<br>
 - [Output example - Fasta list](#output-example---fasta-list)<br>
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
 - [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
 - [Next updates](#next-updates)<br>
 
 ## Suggested use
-This program has been written thinking as **improvement of quality of life** for extracting the domains.
+This program has been thought as **Quality of Life tool** for extracting the domains.
 <br>
 <br>
 <i> **Exempli gratia**</i><br>
-I want to investigate the relationship between the domains of multiple species:
-1) Download the transcriptome of my species target
-2) For each transcriptome obtain a new proteins' fasta list via hmmsearch from <a href="http://hmmer.org/">HMMER</a>
-3) Run an InterPro analysis for each sequences in every fasta list
-4) Run Cuterle to extract every domain from each sequences choosing an InterPro accession ID for automatic domains' extraction (e.g. IPR002035)
-5) Run some MSA and phylogenetic analysis to get some hint about the domain of interest
+I want to extract a specific domain (IPR002035) from transcriptome:
+1) Download the transcriptome's target obtaining an `trascriptome.fasta` file
+2) Run InterProScan analysis against the transcriptome obtaining an `transcriptome_result.tsv` file: <br>`./interproscan.sh -o ./transcriptome_result.tsv -i ./transcriptome.fasta -f tsv -dp`
+3) Run Cuterle:<br>`python3 main.py -tsv transcriptome_result.tsv -fasta transcriptome.fasta -accession IPR002035`
+4) Be happy with your `extracted_domains.fasta` result file
 
-Thanks to the arguments option, the point 2, 3 and 4 are scriptable, saving **A LOT** of time.
+Thanks to the arguments option, the point 2,3 and 4 are scriptable, saving **A LOT** of time.
 
+*Post Scriptum*<br>
+With multiple transcriptomes to scan you should run an HMMER analysis, creating a reducted fasta list to use in point 2
 
 ## Limitations
-**The biggest limitation** is that Cuterle choose between Pfam and SMART at the beginning of the program,
-and not evaluating it for every protein (see [Next updates](#next-updates)).
-
-<br> 
-This program does nothing more than extracting the domains identified by InterPro, choosing which analysis get more results.<br>
+- This program does nothing more than extracting the domains identified by InterProScan
 <br>
-This program **has not** been thought to replace software which perform protein analysis, like <a href="http://smart.embl-heidelberg.de/">SMART</a>.
+- Non-canonical domain could be not identified
+<br>
+- This program **has not** been thought to replace software which perform complete protein analysis, like <a href="http://smart.embl-heidelberg.de/">SMART</a> 
 
 
 
@@ -129,8 +132,11 @@ python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -nf 1
 python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -a SMART -nf 6,2,1,2,3 -accession IPR002035
 ```
 
-### Usage - Assisted mode
+### Usage - Graphical mode
+An ultra-simple-gui has been created. So bad it's good.
+<img src="./screenshots/07_main_gui.png" width="700">
 
+### Usage - Assisted mode
 In terminal run:
 ```bash
 python3 main.py
@@ -196,9 +202,7 @@ There are two main way to get an tsv file from InterPro:
 ## Next updates
 
 **TOP PRIORITY**
-- Adding a GUI
-- Re-organization of all the code in function, allowing the creation of GUI.
-- Change the way Cuterle choose the analysis (from once-at-start to protein-to-protein choice)
+- None
 
 **MEDIUM PRIORITY**
 - None

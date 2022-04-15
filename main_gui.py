@@ -70,6 +70,9 @@ def extract_domains():
     global RESULT_DICTIONARY
     global TABLE_LIST
 
+    t_table.delete(*t_table.get_children())
+
+
     check_column_name(TSV_FILE)
     protein_list = protein_list_maker(FASTA_FILE)
     dataframe_tsv = pd.read_table(TSV_FILE)
@@ -280,7 +283,7 @@ b_save_extracted_domains.grid(column=0, row=5, pady=5)
 
 # Button - Reset
 b_reset = Button(center_left_frame, text="Reset", command=reset_all)
-b_reset.grid(column=0, row=6, pady=5)
+b_reset.grid(column=0, row=6, pady=50)
 
 # Layout all the widgets in the right frame
 

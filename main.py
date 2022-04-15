@@ -232,11 +232,8 @@ else:
 
     domain_to_save = []
 
-    # DA ELIMNARE
-    save_choice_input = "all"
-
     while True:
-        # save_choice_input = input("Write here your choice: ")
+        save_choice_input = input("Write here your choice: ")
         save_choice_list = save_choice_input.split(",")
         save_choice = save_choice_list[0]
 
