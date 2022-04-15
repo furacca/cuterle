@@ -44,9 +44,7 @@ With multiple transcriptomes to scan you should run an HMMER analysis, creating 
 
 ## Limitations
 - This program does nothing more than extracting the domains identified by InterProScan
-<br>
 - Non-canonical domain could be not identified
-<br>
 - This program **has not** been thought to replace software which perform complete protein analysis, like <a href="http://smart.embl-heidelberg.de/">SMART</a> 
 
 
