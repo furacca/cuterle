@@ -1,12 +1,10 @@
 import os
 import turtle
 from turtle import Turtle, Screen
-import pandas as pd
-from Bio import SeqIO
 from PIL import Image
 
 
-def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_with_description):
+def sequences_drawer(protein_list, table_list, result_dictionary):
     # Color list
     main_domains_color = ["purple", "red", "violet", "blue", "green", "yellow", "orange", "brown", "cyan"]
     secondary_domains_color = ["gray75"]
@@ -17,56 +15,42 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
     style_text_scale = ("Arial", 20, "italic")
     style_text_segment_scale = ("Arial", 10, "")
 
-    # Count how much protein sequences tehre are in fasta format and create a list of all protein
-    protein_list = []
-    with open(fasta_file, "r") as file:
-        for everyrecord in SeqIO.parse(file, "fasta"):
-            if everyrecord.id in protein_list:
-                pass
-            else:
-                protein_list.append(everyrecord.id)
-    num_prot = 0
-
     # Counter to rename output file when another file with the same name exist
     list_of_file = os.listdir("./")
-    if "03_graphical_output.jpg" in list_of_file:
+    if "domains_view.jpg" in list_of_file:
         z = 1
         while os.path.exists("domains_view%s.jpg" % z):
             z += 1
     else:
         z = 1
 
-    # Assign for every domain (in decrescent order) a fixed color, used in all protein drawn
-    # domains_dict is a dictionary containing {"domain name":number_of_domain_discovered, ~}
-    domains_tuple_ordered = domains_dict.items()
+    item_in_list = len(table_list)
 
-    domains_tuple_ordered = sorted(domains_tuple_ordered, key=lambda zum: zum[1], reverse=True)
-
-    if len(domains_tuple_ordered) < 9:
-        number_of_domains = len(domains_tuple_ordered)
+    if item_in_list < 9:
+        number_of_domains = item_in_list
     else:
         number_of_domains = 9
 
     dict_domain_color = {}
+
     for n in range(0, number_of_domains):
-        dict_domain_color[domains_tuple_ordered[n][0]] = main_domains_color[n]
+        dict_domain_color[table_list[n][1]] = main_domains_color[n]
 
     # ***********************************************************************
-    # STARTING THE DRAWING PROCESS - FOR CYCLE FOR TAKE ONE PROTEIN AT TIME
+    # STARTING THE DRAWING PROCESS - FOR CYCLE TAKE ONE PROTEIN AT TIME
     # ***********************************************************************
 
     # For every protein in protein list extract the lines containing analysis_used
     for everyprotein in protein_list:
-        dataframe1 = pd.read_table(tsv_file)
-        df_first_filter = dataframe1.loc[dataframe1["3"] == analysis_used]
-        df_second_filter = df_first_filter.loc[df_first_filter["0"] == everyprotein]
+        domain_counter = 0
+        protein_length = len(result_dictionary[everyprotein]["Sequence"])
 
-        number_of_domains_filtered = int(len(df_second_filter))
-        unsorted_dict_result_filtered = df_second_filter.to_dict("records")
-        dict_result_filtered = sorted(unsorted_dict_result_filtered, key=lambda i: (i["0"], i["6"]), reverse=True)
+        # Counting the domain
+        for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+            domain_counter += 1
 
-        # Check if the protein hasn't ANY domains, skip
-        if number_of_domains_filtered == 0:
+        # If the protein hasn't ANY domains, skip
+        if domain_counter == 0:
             pass
         else:
             screen = Screen()
@@ -78,14 +62,15 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
                               canvheight=500,
                               bg="white")
 
-            # drawer ex name was "spd" (Single Protein Drawer)
-            drawer = Turtle()
+            # drawer first ex name was "spd" (Single Protein Drawer)
+            # d second ex name was "drawer" (changed to clean up the code)
+            d = Turtle()
 
             # Hide the turtle-cursor
-            drawer.hideturtle()
+            d.hideturtle()
 
             # Scale the length of the protein
-            seq_length = int(dict_result_filtered[0]["2"])
+            seq_length = protein_length
             scale = 1
             if seq_length * 2 < 800:
                 scale = scale * 2
@@ -100,34 +85,34 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             y_point_to_start = -70
 
             # Draw the name of the protein
-            prot_name = dict_result_filtered[0]["0"]
-            drawer.penup()
-            drawer.goto(x_point_to_start, 130)
-            drawer.pendown()
-            drawer.write(prot_name, font=style_text_nameprotein)
+            prot_name = everyprotein
+            d.penup()
+            d.goto(x_point_to_start, 130)
+            d.pendown()
+            d.write(prot_name, font=style_text_nameprotein)
 
             # Check if is needed to report the scale under the name of the protein
             if scale != 1:
-                drawer.penup()
-                drawer.goto(x_point_to_start, 100)
-                drawer.pendown()
-                drawer.write(f"Protein dimension scaled by {scale}", font=style_text_scale)
+                d.penup()
+                d.goto(x_point_to_start, 100)
+                d.pendown()
+                d.write(f"Protein dimension scaled by {scale}", font=style_text_scale)
 
             # Draw the entire length of the protein
-            drawer.pensize(5)
-            drawer.pencolor("black")
-            drawer.penup()
-            drawer.goto(x_point_to_start, y_point_to_start)
-            drawer.pendown()
-            drawer.forward(scalated_seq_lenght)
+            d.pensize(5)
+            d.pencolor("black")
+            d.penup()
+            d.goto(x_point_to_start, y_point_to_start)
+            d.pendown()
+            d.forward(scalated_seq_lenght)
 
             # Draw the length reference **LINE** under the protein
-            drawer.pensize(2)
-            drawer.pencolor("black")
-            drawer.penup()
-            drawer.goto(x_point_to_start, y_point_to_start - 40)
-            drawer.pendown()
-            drawer.forward(scalated_seq_lenght)
+            d.pensize(2)
+            d.pencolor("black")
+            d.penup()
+            d.goto(x_point_to_start, y_point_to_start - 40)
+            d.pendown()
+            d.forward(scalated_seq_lenght)
 
             # Draw the length reference **MILESTONES** under the protein
             segments = int(scalated_seq_lenght / 100)
@@ -141,47 +126,47 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             # 3) If the last segment is > 50, print the (last one -1) and print the last segments
             for n in range(0, segments + 1):
                 if n < segments:
-                    drawer.penup()
-                    drawer.goto(segments_starting_point, y_point_to_start - 30)
-                    drawer.pendown()
-                    drawer.goto(segments_starting_point, y_point_to_start - 50)
-                    drawer.penup()
-                    drawer.goto(segments_starting_point - 5, y_point_to_start - 65)
-                    drawer.pendown()
-                    drawer.write(milestone, font=style_text_segment_scale)
-                    drawer.penup()
+                    d.penup()
+                    d.goto(segments_starting_point, y_point_to_start - 30)
+                    d.pendown()
+                    d.goto(segments_starting_point, y_point_to_start - 50)
+                    d.penup()
+                    d.goto(segments_starting_point - 5, y_point_to_start - 65)
+                    d.pendown()
+                    d.write(milestone, font=style_text_segment_scale)
+                    d.penup()
                 else:
                     if segments_exceed < 50:
                         segments_add = segments_starting_point + segments_exceed
-                        drawer.penup()
-                        drawer.goto(segments_add, y_point_to_start - 30)
-                        drawer.pendown()
-                        drawer.goto(segments_add, y_point_to_start - 50)
-                        drawer.penup()
-                        drawer.goto(segments_add - 5, y_point_to_start - 65)
-                        drawer.pendown()
-                        drawer.write(seq_length, font=style_text_segment_scale)
-                        drawer.penup()
+                        d.penup()
+                        d.goto(segments_add, y_point_to_start - 30)
+                        d.pendown()
+                        d.goto(segments_add, y_point_to_start - 50)
+                        d.penup()
+                        d.goto(segments_add - 5, y_point_to_start - 65)
+                        d.pendown()
+                        d.write(seq_length, font=style_text_segment_scale)
+                        d.penup()
                     else:
-                        drawer.penup()
-                        drawer.goto(segments_starting_point, y_point_to_start - 30)
-                        drawer.pendown()
-                        drawer.goto(segments_starting_point, y_point_to_start - 50)
-                        drawer.penup()
-                        drawer.goto(segments_starting_point - 5, y_point_to_start - 65)
-                        drawer.pendown()
-                        drawer.write(milestone, font=style_text_segment_scale)
-                        drawer.penup()
+                        d.penup()
+                        d.goto(segments_starting_point, y_point_to_start - 30)
+                        d.pendown()
+                        d.goto(segments_starting_point, y_point_to_start - 50)
+                        d.penup()
+                        d.goto(segments_starting_point - 5, y_point_to_start - 65)
+                        d.pendown()
+                        d.write(milestone, font=style_text_segment_scale)
+                        d.penup()
                         segments_starting_point += segments_exceed
-                        drawer.penup()
-                        drawer.goto(segments_starting_point, y_point_to_start - 30)
-                        drawer.pendown()
-                        drawer.goto(segments_starting_point, y_point_to_start - 50)
-                        drawer.penup()
-                        drawer.goto(segments_starting_point - 5, y_point_to_start - 65)
-                        drawer.pendown()
-                        drawer.write(seq_length, font=style_text_segment_scale)
-                        drawer.penup()
+                        d.penup()
+                        d.goto(segments_starting_point, y_point_to_start - 30)
+                        d.pendown()
+                        d.goto(segments_starting_point, y_point_to_start - 50)
+                        d.penup()
+                        d.goto(segments_starting_point - 5, y_point_to_start - 65)
+                        d.pendown()
+                        d.write(seq_length, font=style_text_segment_scale)
+                        d.penup()
 
                 milestone += int(100 / scale)
                 segments_starting_point += 100
@@ -190,12 +175,11 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             altitudine = 20
             direction = "+"
 
-            # For every domain filtered we have to do a lot of things
-            for er in range(0, number_of_domains_filtered):
-                # ----> Extracting multiple variable
-                start_location = dict_result_filtered[er]["6"]
-                stop_location = dict_result_filtered[er]["7"]
-                interpro_annotation = dict_result_filtered[er][column_with_description]
+            for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+
+                start_location = everydomain["START"]
+                stop_location = everydomain["STOP"]
+                interpro_annotation = everydomain["DOMAIN_NAME"]
                 interpro_annotation_mod = interpro_annotation.upper()
 
                 # Stop/start/domain dimension scaled
@@ -203,68 +187,68 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
                 scalated_stop_location = int(stop_location * scale)
                 scalated_domain_length = scalated_stop_location - scalated_start_location
 
-                # Choose the color for the domain
+                # # Choose the color for the domain
                 if interpro_annotation in dict_domain_color.keys():
                     color_choosen = dict_domain_color[interpro_annotation]
                 else:
                     color_choosen = secondary_domains_color[0]
 
                 # Reset the position
-                drawer.home()
+                d.home()
 
                 # Draw the domain
-                drawer.pencolor(color_choosen)
-                drawer.pensize(10)
-                drawer.penup()
-                drawer.goto(x_point_to_start, y_point_to_start)
-                drawer.forward(scalated_start_location)
-                drawer.pendown()
-                drawer.forward(scalated_domain_length)
-                drawer.penup()
+                d.pencolor(color_choosen)
+                d.pensize(10)
+                d.penup()
+                d.goto(x_point_to_start, y_point_to_start)
+                d.forward(scalated_start_location)
+                d.pendown()
+                d.forward(scalated_domain_length)
+                d.penup()
 
                 # Draw the domain's name background (to delete the line colliding with the name)
-                drawer.pensize(2)
-                drawer.penup()
-                drawer.backward(scalated_domain_length)
-                drawer.pencolor(color_choosen)
-                drawer.left(90)
-                drawer.forward(5)
-                drawer.pendown()
-                drawer.forward(altitudine)
-                position_to_save_02 = drawer.pos()
-                drawer.penup()
-                drawer.backward(7)
-                drawer.right(90)
-                drawer.forward(5)
-                position_to_save_01 = drawer.pos()
-                drawer.forward(3)
-                drawer.left(90)
-                drawer.forward(5)
-                drawer.right(90)
-                drawer.pendown()
-                drawer.pensize(10)
-                drawer.pencolor("white")
-                length_name = int(len(interpro_annotation)*4.7)
-                drawer.forward(length_name)
-                drawer.penup()
+                d.pensize(2)
+                d.penup()
+                d.backward(scalated_domain_length)
+                d.pencolor(color_choosen)
+                d.left(90)
+                d.forward(5)
+                d.pendown()
+                d.forward(altitudine)
+                position_to_save_02 = d.pos()
+                d.penup()
+                d.backward(7)
+                d.right(90)
+                d.forward(5)
+                position_to_save_01 = d.pos()
+                d.forward(3)
+                d.left(90)
+                d.forward(5)
+                d.right(90)
+                d.pendown()
+                d.pensize(10)
+                d.pencolor("white")
+                length_name = int(len(interpro_annotation) * 4.7)
+                d.forward(length_name)
+                d.penup()
 
                 # Draw domain's name
-                drawer.goto(position_to_save_01)
-                drawer.pendown()
-                drawer.pencolor("black")
-                drawer.write(interpro_annotation_mod, font=style_text_domain)
-                drawer.penup()
+                d.goto(position_to_save_01)
+                d.pendown()
+                d.pencolor("black")
+                d.write(interpro_annotation_mod, font=style_text_domain)
+                d.penup()
 
                 # Draw indicator
-                drawer.pencolor(color_choosen)
-                drawer.goto(position_to_save_02)
-                drawer.pensize(2)
-                drawer.pendown()
-                drawer.right(45)
-                drawer.forward(4)
-                drawer.right(90)
-                drawer.forward(3.5)
-                drawer.penup()
+                d.pencolor(color_choosen)
+                d.goto(position_to_save_02)
+                d.pensize(2)
+                d.pendown()
+                d.right(45)
+                d.forward(4)
+                d.right(90)
+                d.forward(3.5)
+                d.penup()
 
                 # If cycle to setting up the order of each domain
                 if altitudine > 130:
@@ -281,7 +265,7 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
 
             # Time to save the draw
             # GOD SAVE THE SCREEN!
-            ts = drawer.getscreen()
+            ts = d.getscreen()
 
             # Set the dimension of the area
             ts.getcanvas().postscript(file="temp_%s.ps" % z,
@@ -294,9 +278,9 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
             # screen.exitonclick()
 
             # Open the image with pillow
+            # scale=7? prima inserito in psimage.load
             psimage = Image.open("temp_%s.ps" % z)
             psimage.load(scale=7)
-
             # Saving the image as .png
             # For PNG format just change .jpg in .png
             psimage.save('domains_view%s.jpg' % z, dpi=(100, 100), quality=95)
@@ -308,6 +292,3 @@ def sequences_drawer(fasta_file, domains_dict, tsv_file, analysis_used, column_w
 
         # Increase the counter for the images' name
         z += 1
-
-        # Increase the counter to pass to the next protein
-        num_prot += 1

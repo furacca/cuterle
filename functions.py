@@ -1,6 +1,7 @@
 import os
 import fnmatch
 from tabulate import tabulate
+from Bio import SeqIO
 
 
 # Create a file_list with all the file with the extension requested
@@ -46,6 +47,23 @@ def check_column_name(tsv_file):
             file.write(copia)
 
 
+def i_counter():
+    list_of_file = os.listdir("./")
+    if "extracted_domains.fasta" in list_of_file \
+            or "domains_table.csv" in list_of_file \
+            or "domains_list.csv" in list_of_file:
+        i = 1
+        while os.path.exists("extracted_domains%s.fasta" % i):
+            i += 1
+        while os.path.exists("domains_table%s.csv" % i):
+            i += 1
+        while os.path.exists("domains_list%s.csv" % i):
+            i += 1
+    else:
+        i = ""
+    return i
+
+
 def seq_in_fastafile_count(fasta_file):
     with open(fasta_file, "r") as file:
         fileread = file.read()
@@ -56,9 +74,48 @@ def seq_in_fastafile_count(fasta_file):
         return seq_counter
 
 
-def printing_table(list_of_multiple_table_list):
+def protein_list_maker(fasta_file):
+    temp_protein_list = []
+    with open(fasta_file, "r") as file:
+        for everyrecord in SeqIO.parse(file, "fasta"):
+            if everyrecord.id in temp_protein_list:
+                pass
+            else:
+                temp_protein_list.append(everyrecord.id)
+    return temp_protein_list
+
+
+def create_table_row_list(result_dictionary):
+    # Create a list containing all the row printed by the table
+    table_row_list = []
+    domain_count_dict = {}
+    interpro_accession = {}
+
+    for everyrecord in result_dictionary:
+        for n in result_dictionary[everyrecord]["Extracted_domains"]:
+            domain_name = n["DOMAIN_NAME"]
+            ip_accession = n["IP_ACCESSION"]
+            if domain_name in domain_count_dict:
+                domain_count_dict[domain_name] += 1
+            else:
+                domain_count_dict[domain_name] = 1
+            if ip_accession in interpro_accession:
+                pass
+            else:
+                interpro_accession[domain_name] = ip_accession
+
+    for everydomain in interpro_accession:
+        temporary_list = [interpro_accession[everydomain], everydomain, domain_count_dict[everydomain]]
+        table_row_list.append(temporary_list)
+
+    table_row_list = sorted(table_row_list, key=lambda item: item[2], reverse=True)
+
+    return table_row_list
+
+
+def printing_table(table_list):
     header = ("Accession ID", "Domain name", "Domains' number found")
-    print(tabulate(list_of_multiple_table_list,
+    print(tabulate(table_list,
                    headers=header,
                    tablefmt="grid",
                    colalign=("center", "center", "center"),

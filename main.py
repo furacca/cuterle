@@ -1,16 +1,12 @@
 from functions import *
+from result_dictionary_maker import *
 from drawer import *
 from asciithing import *
-from Bio import SeqIO
 import pandas as pd
-import os
 import argparse
 import textwrap
 
-# *********************************************************************************************
-# ARGPARSE - THE RACCOMENDED COMMAND-LINE PARSING MODULE IN THE PYTHON STANDARD LIBRARY
-# *********************************************************************************************
-
+# Argparse - The raccomanded command-line parsing module in the python standard library
 description_message = '''\
                         -----------------------------------------------------------------
                         IF NO OPTION IS SELECTED, THE PROGRAM WILL RUN IN [ASSISTED MODE]
@@ -104,30 +100,23 @@ table_choice = cuterle_options.savetable
 draw_choice = cuterle_options.draw_image
 
 # *********************************************************************************************
-# START
 # *********************************************************************************************
-if manual_mode:
+
+# Get tsv file as input - The while loop checks the existences of the input tsv file
+if manual_mode and existence_file_check(tsv_file, "*.tsv"):
     pass
-else:
+elif manual_mode and tsv_file is None:
+    print(f"You have not selected any tsv file!")
+    exit()
+elif manual_mode:
+    print(f"{tsv_file} doesn't exist or doesn't has the correct format!")
+    exit()
+elif manual_mode is False:
     print(logo)
     print(separator)
     print("Welcome, this is CUTERLE, \n"
           "a bioinformatic tool which return an output file containing every domain annotated by InterProScan\n"
           "via Pfam or SMART analysis from the list of protein submitted.")
-
-# *********************************************************************************************
-# GIVE THE TSV FILE AS INPUT - THE WHILE LOOP CHECKS THE EXISTENCES OF THE INPUT FILE .tsv
-# *********************************************************************************************
-if manual_mode:
-    if existence_file_check(tsv_file, "*.tsv"):
-        pass
-    else:
-        if tsv_file is None:
-            print(f"You have not selected any tsv file!")
-        else:
-            print(f"{tsv_file} doesn't exist or doesn't has the correct format!")
-        exit()
-else:
     print(separator)
     print("The first file requested is the one with ~.tsv extension which contains the domains coordinates.")
     print("In the current folder you have the following *.tsv files:")
@@ -141,25 +130,21 @@ else:
             print(f"{tsv_file} doesn't exist or doesn't has .tsv extension. Retry.")
             pass
 
-# *********************************************************************************************
-# GIVE THE FASTA FILE AS INPUT - THE WHILE LOOP CHECKS THE EXISTENCES OF THE INPUT FILE .fasta
-# *********************************************************************************************
-if manual_mode:
-    if existence_file_check(fasta_file, "*.fasta"):
-        pass
-    else:
-        if fasta_file is None:
-            print(f"You have not selected any fasta file!")
-        else:
-            print(f"{fasta_file} doesn't exist or doesn't has the correct format!")
-        exit()
+# Get fasta file as input - The while loop checks the existences of the input fasta file
+if manual_mode and existence_file_check(tsv_file, "*.fasta"):
+    pass
+elif manual_mode and fasta_file is None:
+    print(f"You have not selected any fasta file!")
+    exit()
+elif manual_mode:
+    print(f"{fasta_file} doesn't exist or doesn't has the correct format!")
+    exit()
 else:
     print(separator)
     print("The second file requested is the one with ~.fasta extension which contains the sequence list.")
     print("Remember to use THE SAME fasta file used to get the tsv one.")
     print("In the current folder you have the following *.fasta files:")
     print_file_in_the_folder("*.fasta")
-
     while True:
         fasta_file = input("Type the file name using this format -> file.fasta : ")
         if existence_file_check(fasta_file, "*.fasta"):
@@ -168,143 +153,70 @@ else:
             print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
             pass
 
+# The "i" set the same number-counter for all output file (extracted_files, table, log, ecc),
+# avoiding overwrite some file previously created
+i = i_counter()
 
-# *********************************************************************************************
-# CHECK (AND EVENTUALLY ADD) IF THE FILE ALREADY HAS COLUMNS' NAME (0, 2, 3, ... )
-# *********************************************************************************************
+# Checks (and eventually add) if the tsv file already has columns' name (0, 1, 2, 3, ...)
 check_column_name(tsv_file)
 
-# *********************************************************************************************
-# CREATE WITH PANDAS A NEW DATAFRAME
-# *********************************************************************************************
-dataframe_file_tsv = pd.read_table(tsv_file)
+# Create a list which contains every protein name
+protein_list = protein_list_maker(fasta_file)
 
-# *********************************************************************************************
-# COUNT HOW MANY RESULTS THERE ARE AND CHOOSE "Pfam" VS "SMART"
-# *********************************************************************************************
-result_of_analysis_pfam = dataframe_file_tsv.loc[dataframe_file_tsv["3"] == "Pfam"]
-number_of_result_of_analysis_pfam = len(result_of_analysis_pfam)
-result_of_analysis_smart = dataframe_file_tsv.loc[dataframe_file_tsv["3"] == "SMART"]
-number_of_result_of_analysis_smart = len(result_of_analysis_smart)
+# Create with pandas a new dataframe
+dataframe_tsv = pd.read_table(tsv_file)
 
-analysis_used = ""
-# Check if a prior_choice has been made, otherwise count the result and proceed
-if prior_choice == "SMART":
-    analysis_used = "SMART"
-elif prior_choice == "Pfam":
-    analysis_used = "Pfam"
-elif number_of_result_of_analysis_smart > number_of_result_of_analysis_pfam:
-    analysis_used = "SMART"
-elif number_of_result_of_analysis_smart <= number_of_result_of_analysis_pfam:
-    analysis_used = "Pfam"
+# Create results_dictionary
+domain_order = "Increasing"
+result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file, domain_order)
 
-result_of_analysis = ""
-if analysis_used == "Pfam":
-    result_of_analysis = result_of_analysis_pfam
-elif analysis_used == "SMART":
-    result_of_analysis = result_of_analysis_smart
+# Count how many result for each analysis have been found
+smart_counter = 0
+pfam_counter = 0
+for everyrecord in result_dictionary:
+    if result_dictionary[everyrecord]["Analysis_used"] == "Pfam":
+        pfam_counter += len(result_dictionary[everyrecord]["Extracted_domains"])
+    elif result_dictionary[everyrecord]["Analysis_used"] == "SMART":
+        smart_counter += len(result_dictionary[everyrecord]["Extracted_domains"])
 
-number_of_result_of_analysis = int(len(result_of_analysis))
+# Count how many result there are in total for both analysis
+smart_plus_pfam = smart_counter + pfam_counter
 
-# *********************************************************************************************
-# CREATE A DICTIONARY WITH THE RESULT OF ANALYSIS; THEN SORT IT
-# *********************************************************************************************
-unsorted_dictionary_of_result = result_of_analysis.to_dict("records")
-sorted_results_dictionary = sorted(unsorted_dictionary_of_result, key=lambda z: (z["0"], z["6"]))
-
-# *********************************************************************************************
-# CREATING TWO NEW DICTIONARIES:
-# 1) domains_counter_dict which report for every domain how much copy of it there are
-# 2) domains_interpro_accession_dict which report for every domain the InterPro accession ID
-# *********************************************************************************************
-column_with_description = ""
-if analysis_used == "SMART":
-    column_with_description = "12"
-elif analysis_used == "Pfam":
-    column_with_description = "5"
-
-domains_counter_dict = {}
-domains_interpro_accession_dict = {}
-for er in range(0, number_of_result_of_analysis):
-    signature_description = sorted_results_dictionary[er][column_with_description]
-
-    if signature_description in domains_counter_dict:
-        domains_counter_dict[signature_description] += 1
-    else:
-        domains_counter_dict[signature_description] = 1
-
-    interpro_accession = sorted_results_dictionary[er]["11"]
-
-    if interpro_accession in domains_interpro_accession_dict:
-        pass
-    elif interpro_accession not in domains_interpro_accession_dict:
-        domains_interpro_accession_dict[signature_description] = interpro_accession
-
-# *********************************************************************************************
-# THE i COUNTER SET THE SAME NUMBER FOR ALL OUTPUT FILE, AVOIDING OVERWRITE SOME FILE PREVIOUSLY CREATED
-# *********************************************************************************************
-list_of_file = os.listdir("./")
-
-if "extracted_domains.fasta" in list_of_file \
-        or "domains_table.csv" in list_of_file \
-        or "domains_list.csv" in list_of_file:
-    i = 1
-    while os.path.exists("extracted_domains%s.fasta" % i):
-        i += 1
-    while os.path.exists("domains_table%s.csv" % i):
-        i += 1
-    while os.path.exists("domains_list%s.csv" % i):
-        i += 1
-else:
-    i = ""
-
-# *********************************************************************************************
-# PRINT THE DOMAINS TABLE-GRID
-# *********************************************************************************************
-list_of_multiple_table_list = []
-
-for n in domains_counter_dict:
-    one_row_list = []
-
-    for m in domains_interpro_accession_dict:
-        if n == m:
-            one_row_list.append(domains_interpro_accession_dict[m])
-
-    one_row_list.append(n)
-    one_row_list.append(domains_counter_dict[n])
-    list_of_multiple_table_list.append(one_row_list)
-
-list_of_multiple_table_list = sorted(list_of_multiple_table_list, key=lambda item: item[2], reverse=True)
-
-domain_to_save = []
-save_choice_list = []
+# Create a table
+table_list = create_table_row_list(result_dictionary)
 
 if manual_mode:
     if table_choice:
         with open("domains_list%s.csv" % i, "w") as domain_csv:
-            for everykey in domains_counter_dict:
-                domain_csv.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
+            for everyrow in table_list:
+                domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+
+    save_choice_list = []
+    domain_to_save = []
     if accession:
         save_choice_list = accession.split(",")
-        for everychoice in save_choice_list:
-            domain_to_save.append(everychoice)
+        for everyaccession in table_list:
+            domain_to_save.append(everyaccession)
     else:
-        for everychoice in range(0, len(list_of_multiple_table_list)):
-            domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
+        for everyprotein in protein_list:
+            for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+                ip_accession = everydomain["IP_ACCESSION"]
+                if ip_accession in domain_to_save:
+                    pass
+                else:
+                    domain_to_save.append(everydomain["IP_ACCESSION"])
+
 else:
     print(separator)
-
-    printing_table(list_of_multiple_table_list)
-
-    print(f"\nThere was {len(result_of_analysis_pfam)} Pfam results vs {len(result_of_analysis_smart)} SMART results.")
-    print(f"{analysis_used} analysis has been chosen.")
+    printing_table(table_list)
+    print(f"{smart_plus_pfam} domains have been found: {pfam_counter} by Pfam and {smart_counter} by SMART.")
 
     while True:
         table_choice = input("Do you want to save this table as ~.csv file? y/n ")
         if table_choice == "y":
             with open("domains_list%s.csv" % i, "w") as domain_csv:
-                for everykey in domains_counter_dict:
-                    domain_csv.write("%s,%s\n" % (everykey, domains_counter_dict[everykey]))
+                for everyrow in table_list:
+                    domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
                 print(f"You can find your results in domains_list%s.csv\n" % i)
             break
         elif table_choice == "n":
@@ -318,111 +230,111 @@ else:
     print("- None -> 'none' ")
     print("DO NOT use space. If you have some doubt, go back to the readme.")
 
+    domain_to_save = []
+
     while True:
         save_choice_input = input("Write here your choice: ")
         save_choice_list = save_choice_input.split(",")
         save_choice = save_choice_list[0]
 
+        # Da aggiungere eccezione per numeri maggiori dell'index della lista
         if save_choice == "index":
             for everychoice in save_choice_list:
                 if everychoice == "index":
                     pass
                 else:
-                    domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
+                    domain_to_save.append(table_list[int(everychoice)][0])
             break
         elif save_choice == "all":
-            for everychoice in range(0, len(list_of_multiple_table_list)):
-                if everychoice == "all":
-                    pass
-                else:
-                    domain_to_save.append(list_of_multiple_table_list[int(everychoice)][0])
+            for everyelement in table_list:
+                domain_to_save.append(everyelement[0])
             break
         elif save_choice == "none":
-            break
+            exit()
         else:
             print("You forgot to add 'index' or 'accession', or made some typos. Retry.\n")
 
+# # *********************************************************************************************
+# # SAVING THE DOMAINS
+# # *********************************************************************************************
 
-# *********************************************************************************************
-# SAVING THE DOMAINS
-# *********************************************************************************************
-# er = Every Result
+# Counter for the domain saved
 domain_saved = 0
-for er in range(0, number_of_result_of_analysis):
-    # ----> EXTRACT MULTIPLE VARIABLE
-    prot_accession = sorted_results_dictionary[er]["0"]
-    seq_lenght = sorted_results_dictionary[er]["2"]
-    signature_description = sorted_results_dictionary[er]["5"]
-    start_location = sorted_results_dictionary[er]["6"]
-    stop_location = sorted_results_dictionary[er]["7"]
-    interpro_accession = sorted_results_dictionary[er]["11"]
-    interpro_annotation = sorted_results_dictionary[er]["12"]
 
-    if interpro_accession in domain_to_save:
-        domain_saved += 1
-        # ----> USING pro_accession EXTRACT THE SEQUENCES AND SAVE IT IN seq_dominio USING (start/stop)_location
-        with open(fasta_file) as elenco_fasta:
-            for record in SeqIO.parse(elenco_fasta, "fasta"):
-                if record.id == prot_accession:
-                    sequenza = f"{record.seq}"
-        seq_dominio = sequenza[start_location-2:stop_location+2]
-        domain_lenght = (stop_location+2)-(start_location-2)
+#  er = every result
+for everyprotein in protein_list:
+    for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+        protein_accession = everyprotein
+        domain_name = everydomain["DOMAIN_NAME"]
+        domain_order = everydomain["DOMAIN_ORDER"]
+        start_location = everydomain["START"]
+        stop_location = everydomain["STOP"]
+        domain_length = everydomain["LENGTH"]
+        ip_accession = everydomain["IP_ACCESSION"]
+        protein_sequence = result_dictionary[everyprotein]["Sequence"]
+        domain_sequence = protein_sequence[start_location:stop_location]
 
-        # ----> Renaming the sequence following the input
-        if name_format is None:
-            name_format = "1,2,3,4,5,6"
+        if ip_accession in domain_to_save:
+            name_format_dict = {
+                "1": protein_accession,
+                "2": domain_name,
+                "3": domain_length,
+                "4": ip_accession,
+                "5": start_location,
+                "6": stop_location,
+            }
 
-        name_format_dict = {
-            "1": prot_accession,
-            "2": domain_lenght,
-            "3": start_location,
-            "4": stop_location,
-            "5": signature_description,
-            "6": interpro_accession,
-        }
+            # ----> Renaming the sequence following the input
+            if name_format is None:
+                name_format = "1,2,3,4,5,6"
 
-        name_format_choosen = name_format.split(",")
-        name_format_string = ">"
+            name_format_choosen = name_format.split(",")
+            name_format_string = ">"
 
-        for n in name_format_choosen:
-            if n == "1":
-                name_format_string += f" [{name_format_dict[n]}] -"
-            elif n == "2":
-                name_format_string += f" [DOMAIN LENGTH: {name_format_dict[n]}] -"
-            elif n == "3":
-                name_format_string += f" [START: {name_format_dict[n]}] -"
-            elif n == "4":
-                name_format_string += f" [STOP: {name_format_dict[n]}] -"
-            elif n == "5":
-                name_format_string += f" [{name_format_dict[n]}] -"
-            elif n == "6":
-                name_format_string += f" [{name_format_dict[n]}] -"
+            for n in name_format_choosen:
+                if n == "1":
+                    name_format_string += f" [{name_format_dict[n]}] -"
+                elif n == "2":
+                    name_format_string += f" [DOMAIN-NAME: {name_format_dict[n]}] -"
+                elif n == "3":
+                    name_format_string += f" [DOMAIN-LENGTH: {name_format_dict[n]}] -"
+                elif n == "4":
+                    name_format_string += f" [IP-ACCESSION: {name_format_dict[n]}] -"
+                elif n == "5":
+                    name_format_string += f" [START: {name_format_dict[n]}] -"
+                elif n == "6":
+                    name_format_string += f" [STOP: {name_format_dict[n]}] -"
 
-        length_name_format_final = len(name_format_string)
-        sliced_text = slice(length_name_format_final - 2)
-        name_format_string_final = name_format_string[sliced_text]
+            sliced_text = slice(len(name_format_string) - 2)
+            name_format_string_final = name_format_string[sliced_text]
 
-        # ----> IF OUTPUTFILE ALREADY EXISTS APPEND THE SEQUENCES REPORTING MULTIPLE VARIABLE FROM ABOVE
-        try:
-            with open("extracted_domains%s.fasta" % i, "a") as file_output:
-                file_output.write(f"{name_format_string_final}\n")
-                file_output.write(f"{seq_dominio}\n\n")
+            # If the output file already exists, append the sequences
+            try:
+                with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                    file_output.write(f"{name_format_string_final}\n")
+                    file_output.write(f"{domain_sequence}\n\n")
 
-        # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
-        except FileNotFoundError:
-            with open("extracted_domains%s.fasta" % i, "w") as file_output:
-                file_output.write(f"{name_format_string_final}\n")
-                file_output.write(f"{seq_dominio}\n\n")
+            # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
+            except FileNotFoundError:
+                with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                    file_output.write(f"{name_format_string_final}\n")
+                    file_output.write(f"{domain_sequence}\n\n")
+
+            domain_saved += 1
 
 if manual_mode is False:
     print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
 
-# *********************************************************************************************
-# ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)
-# *********************************************************************************************
+# # *********************************************************************************************
+# # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)
+# # *********************************************************************************************
 if manual_mode:
     if draw_choice:
-        sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
+        domain_order = "Increasing"
+        result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                                                    domain_order)
+
+        sequences_drawer(protein_list, table_list, result_dictionary)
 else:
     print(separator)
     while True:
@@ -434,7 +346,10 @@ else:
             while True:
                 choice = input("\nAre you sure to continue? y/n ")
                 if choice == "y":
-                    sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
+                    domain_order = "Decreasing"
+                    result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                                                                domain_order)
+                    sequences_drawer(protein_list, table_list, result_dictionary)
                     break
                 elif choice == "n":
                     break
@@ -442,7 +357,10 @@ else:
                     print("Strange way to type 'y' or 'n'. Retry.\n")
             break
         elif wanna_draw == "y":
-            sequences_drawer(fasta_file, domains_counter_dict, tsv_file, analysis_used, column_with_description)
+            domain_order = "Decreasing"
+            result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
+                                                        domain_order)
+            sequences_drawer(protein_list, table_list, result_dictionary)
             break
         elif wanna_draw == "n":
             break
