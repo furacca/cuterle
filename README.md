@@ -139,8 +139,8 @@ In terminal run:
 ```bash
 python3 main.py
 ```
-If no optional argument is given, the program will run the assisted mode. <br>
-Assisted mode is **a lot** verbose.
+If no optional argument is given, the program will run in _assisted mode_ (which is **a lot** verbose). <br>
+
 
 <img src="./screenshots/01_first_view.png" width="700">
 <!-- ![](./screenshots/01_first_view.png) -->
