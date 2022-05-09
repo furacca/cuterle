@@ -17,7 +17,6 @@ description_message = '''\
                             It returns an output file containing every domain annotated by InterProScan.
                             Pfam or SMART analysis are choosen by which method has more matches.
 
-
                         LIST OF OUTPUT FILE
 
                             extracted_domains.fasta - contains every domains extracted
@@ -69,7 +68,7 @@ cuterle_parser.add_argument("-a",
                             )
 
 cuterle_parser.add_argument("-nf",
-                            help="Name format. Read the documentation. Format: [1,2,3,4,5]",
+                            help="Name format. Read the documentation. Default format: [1,2,3,4,5]",
                             type=str,
                             )
 
@@ -131,7 +130,7 @@ elif manual_mode is False:
             pass
 
 # Get fasta file as input - The while loop checks the existences of the input fasta file
-if manual_mode and existence_file_check(tsv_file, "*.fasta"):
+if manual_mode and existence_file_check(fasta_file, "*.fasta"):
     pass
 elif manual_mode and fasta_file is None:
     print(f"You have not selected any fasta file!")
