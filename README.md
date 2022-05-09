@@ -1,4 +1,4 @@
-<p align="center"><img src="./screenshots/00_logo.png"></p>
+<p align="center"><img src="./images/00_logo.png"></p>
 
 # Cuterle
 Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) 
@@ -133,7 +133,7 @@ python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -a SM
 
 ### Usage - Graphical mode
 An ultra-simple-gui has been created. So bad it's good.
-<img src="./screenshots/07_main_gui.png" width="700">
+<img src="./images/07_main_gui.png" width="700">
 
 ### Usage - Assisted mode
 In terminal run:
@@ -143,8 +143,8 @@ python3 main.py
 If no optional argument is given, the program will run in _assisted mode_ (which is **a lot** verbose). <br>
 
 
-<img src="./screenshots/01_first_view.png" width="700">
-<!-- ![](./screenshots/01_first_view.png) -->
+<img src="./images/01_first_view.png" width="700">
+<!-- ![](./images/01_first_view.png) -->
 
 
 Once you run main.py in terminal, the program request the two input files (~.tsv and ~.fasta).<br>
@@ -156,7 +156,7 @@ If you are not sure about how getting the tsv file follow [How to get a ~.tsv fi
 Summary table ("Accession ID", "Domain name" and "Domains' number found" as header) is graphically printed.
 It's possible to save it.
 
-<img src="./screenshots/02_first_run.png" width="700">
+<img src="./images/02_first_run.png" width="700">
 <br>
 
 ## Output example - Fasta list
@@ -175,7 +175,7 @@ Where every {number} refer to the follow information:
 
 It's possible to change the syntax only by running the manual mode (or manual editing the code).
 
-<img src="./screenshots/04_extracted_domain_output.png" width="700">
+<img src="./images/04_extracted_domain_output.png" width="700">
 
 <br>
 
@@ -186,14 +186,14 @@ Every domain has a default color which is the same for all the proteins. There a
 - Scale applied (if the scale is 1, it's hidden)
 - Draw of the protein with its domains
 
-<img src="./screenshots/03_graphical_output.jpg" width="700">
+<img src="./images/03_graphical_output.jpg" width="700">
 
 ## How to get a ~.tsv file
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install and run it on some local machine
 2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtain the tsv file (like in the screenshot below):
 
-2) <img src="./screenshots/06_InterProWebsite.png" width="700">
+2) <img src="./images/06_InterProWebsite.png" width="700">
 
 <br><br>
 

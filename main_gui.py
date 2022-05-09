@@ -221,7 +221,7 @@ center_framecomp.grid(row=1, column=0, stick="nsew")
 # ****************************************************
 
 # Create all the widget of the top frame
-logo = Image.open("./screenshots/00_logo.png")
+logo = Image.open("images/00_logo.png")
 resized_logo = logo.resize((650, 200), Image.LANCZOS)
 new_logo = ImageTk.PhotoImage(resized_logo)
 logo_label = Label(top_frame, image=new_logo, background="white")

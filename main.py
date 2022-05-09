@@ -2,9 +2,11 @@ from functions import *
 from result_dictionary_maker import *
 from drawer import *
 from asciithing import *
+from create_html_output import *
 import pandas as pd
 import argparse
 import textwrap
+from datetime import date
 
 # Argparse - The raccomanded command-line parsing module in the python standard library
 description_message = '''\
@@ -82,6 +84,11 @@ cuterle_parser.add_argument("-savetable",
                             action="store_true"
                             )
 
+cuterle_parser.add_argument("-html",
+                            help="Graphical output",
+                            action="store_true"
+                            )
+
 cuterle_parser.add_argument("-draw_image",
                             help="FOR EACH sequences create a ~.jpg file reporting sequence+domains",
                             action="store_true"
@@ -96,6 +103,7 @@ prior_choice = cuterle_options.a
 name_format = cuterle_options.nf
 accession = cuterle_options.accession
 table_choice = cuterle_options.savetable
+html_choice = cuterle_options.html
 draw_choice = cuterle_options.draw_image
 
 # *********************************************************************************************
@@ -152,9 +160,18 @@ else:
             print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
             pass
 
+
+
 # The "i" set the same number-counter for all output file (extracted_files, table, log, ecc),
 # avoiding overwrite some file previously created
 i = i_counter()
+
+# Set the date
+today = date.today()
+
+# Create the folder with this sintax: [date]_Analysis_number_[i]
+path = f"{str(today)}_Analyis_number_{str(i)}"
+os.mkdir(path, 0o666)
 
 # Checks (and eventually add) if the tsv file already has columns' name (0, 1, 2, 3, ...)
 check_column_name(tsv_file)
@@ -189,6 +206,8 @@ if manual_mode:
         with open("domains_list%s.csv" % i, "w") as domain_csv:
             for everyrow in table_list:
                 domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+    if html_choice:
+        create_html_output(fasta_file, tsv_file, i, result_dictionary, table_list)
 
     save_choice_list = []
     domain_to_save = []
