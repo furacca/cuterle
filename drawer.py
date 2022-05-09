@@ -4,7 +4,7 @@ from turtle import Turtle, Screen
 from PIL import Image
 
 
-def sequences_drawer(protein_list, table_list, result_dictionary):
+def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
     # Color list
     main_domains_color = ["purple", "red", "violet", "blue", "green", "yellow", "orange", "brown", "cyan"]
     secondary_domains_color = ["gray75"]
@@ -283,7 +283,7 @@ def sequences_drawer(protein_list, table_list, result_dictionary):
             psimage.load(scale=7)
             # Saving the image as .png
             # For PNG format just change .jpg in .png
-            psimage.save('domains_view%s.jpg' % z, dpi=(100, 100), quality=95)
+            psimage.save(f"{folder_name}/domains_view.jpg", dpi=(100, 100), quality=95)
             psimage.close()
 
             # Removing the temporary image .ps created before

@@ -2,6 +2,7 @@ import os
 import fnmatch
 from tabulate import tabulate
 from Bio import SeqIO
+from datetime import date
 
 
 # Create a file_list with all the file with the extension requested
@@ -47,22 +48,40 @@ def check_column_name(tsv_file):
             file.write(copia)
 
 
+# def i_counter():
+#
+#     list_of_file = os.listdir("./")
+#     if "extracted_domains.fasta" in list_of_file \
+#             or "domains_table.csv" in list_of_file \
+#             or "domains_list.csv" in list_of_file:
+#         i = 1
+#         while os.path.exists("extracted_domains%s.fasta" % i):
+#             i += 1
+#         while os.path.exists("domains_table%s.csv" % i):
+#             i += 1
+#         while os.path.exists("domains_list%s.csv" % i):
+#             i += 1
+#     else:
+#         i = ""
+#     return i
+
 def i_counter():
+    # Set the date
+    today = date.today()
+
     list_of_file = os.listdir("./")
-    if "extracted_domains.fasta" in list_of_file \
-            or "domains_table.csv" in list_of_file \
-            or "domains_list.csv" in list_of_file:
-        i = 1
-        while os.path.exists("extracted_domains%s.fasta" % i):
-            i += 1
-        while os.path.exists("domains_table%s.csv" % i):
-            i += 1
-        while os.path.exists("domains_list%s.csv" % i):
+    i = 1
+    if f"{str(today)}_Analyis_number_1" in list_of_file:
+        while os.path.exists(f"{str(today)}_Analyis_number_{i}"):
             i += 1
     else:
-        i = ""
-    return i
+        i = "1"
 
+    folder_name = f"{str(today)}_Analyis_number_{i}"
+
+    os.mkdir(folder_name, 0o777)
+
+    return folder_name
 
 def seq_in_fastafile_count(fasta_file):
     with open(fasta_file, "r") as file:

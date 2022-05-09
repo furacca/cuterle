@@ -162,16 +162,8 @@ else:
 
 
 
-# The "i" set the same number-counter for all output file (extracted_files, table, log, ecc),
-# avoiding overwrite some file previously created
-i = i_counter()
+folder_name = i_counter()
 
-# Set the date
-today = date.today()
-
-# Create the folder with this sintax: [date]_Analysis_number_[i]
-path = f"{str(today)}_Analyis_number_{str(i)}"
-os.mkdir(path, 0o666)
 
 # Checks (and eventually add) if the tsv file already has columns' name (0, 1, 2, 3, ...)
 check_column_name(tsv_file)
@@ -203,11 +195,11 @@ table_list = create_table_row_list(result_dictionary)
 
 if manual_mode:
     if table_choice:
-        with open("domains_list%s.csv" % i, "w") as domain_csv:
+        with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
             for everyrow in table_list:
                 domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
     if html_choice:
-        create_html_output(fasta_file, tsv_file, i, result_dictionary, table_list)
+        create_html_output(fasta_file, tsv_file, result_dictionary, table_list)
 
     save_choice_list = []
     domain_to_save = []
@@ -232,7 +224,7 @@ else:
     while True:
         table_choice = input("Do you want to save this table as ~.csv file? y/n ")
         if table_choice == "y":
-            with open("domains_list%s.csv" % i, "w") as domain_csv:
+            with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
                 for everyrow in table_list:
                     domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
                 print(f"You can find your results in domains_list%s.csv\n" % i)
@@ -328,13 +320,13 @@ for everyprotein in protein_list:
 
             # If the output file already exists, append the sequences
             try:
-                with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                with open(f"{folder_name}/extracted_domains.fasta", "a") as file_output:
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
             # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
             except FileNotFoundError:
-                with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                with open(f"{folder_name}/extracted_domains.fasta", "w") as file_output:
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
@@ -352,7 +344,7 @@ if manual_mode:
         result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                     domain_order)
 
-        sequences_drawer(protein_list, table_list, result_dictionary)
+        sequences_drawer(protein_list, table_list, result_dictionary, folder_name)
 else:
     print(separator)
     while True:
@@ -367,7 +359,7 @@ else:
                     domain_order = "Decreasing"
                     result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                                 domain_order)
-                    sequences_drawer(protein_list, table_list, result_dictionary)
+                    sequences_drawer(protein_list, table_list, result_dictionary, folder_name)
                     break
                 elif choice == "n":
                     break
@@ -378,7 +370,7 @@ else:
             domain_order = "Decreasing"
             result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                         domain_order)
-            sequences_drawer(protein_list, table_list, result_dictionary)
+            sequences_drawer(protein_list, table_list, result_dictionary, folder_name)
             break
         elif wanna_draw == "n":
             break
