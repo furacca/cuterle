@@ -5,6 +5,7 @@ Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.
 containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) 
 from the list of protein (`~.fasta file`) submitted.
 
+
 Cuterle uses two main analysis of InterPro (there are also <a href="https://interproscan-docs.readthedocs.io/en/latest/HowToRun.html#included-analyses">others analysis</a>):
 - Pfam (XX.X) : A large collection of protein families, each represented by multiple sequence alignments and hidden Markov models (HMMs)
 - SMART (X.X) : SMART allows the identification and analysis of domain architectures based on Hidden Markov Models or HMMs
