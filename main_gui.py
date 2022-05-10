@@ -72,7 +72,6 @@ def extract_domains():
 
     t_table.delete(*t_table.get_children())
 
-
     check_column_name(TSV_FILE)
     protein_list = protein_list_maker(FASTA_FILE)
     dataframe_tsv = pd.read_table(TSV_FILE)
@@ -108,7 +107,7 @@ def save_extracted_domains():
 
     protein_list = protein_list_maker(FASTA_FILE)
 
-    i = i_counter()
+    folder_name = i_counter()
 
     for everyprotein in protein_list:
         for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
@@ -155,17 +154,17 @@ def save_extracted_domains():
 
             # If the output file already exists, append the sequences
             try:
-                with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                with open(f"{folder_name}/extracted_domains.fasta", "a") as file_output:
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
             # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
             except FileNotFoundError:
-                with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                with open(f"{folder_name}/extracted_domains.fasta", "w") as file_output:
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
-    messagebox.showinfo(title="InfoBox", message=f"Extracted sequences saved as\nextracted_domains{i}.fasta")
+    messagebox.showinfo(title="InfoBox", message=f"Extracted sequences saved as\nextracted_domains.fasta")
 
 
 def reset_all():

@@ -53,13 +53,6 @@ def i_counter():
     # Set the date
     today = date.today()
     list_of_file = os.listdir("./")
-    # if "log.txt" in list_of_file:
-    #     with open("log.txt", "r") as file:
-    #         firstline = csv.reader(file)
-    #         for everyrow in firstline:
-    #             if everyrow[0] == f"{today}_counter":
-    #                 i = int(everyrow[1])
-    #             else:
 
     if "log.txt" in list_of_file:
         old_log = []
@@ -67,9 +60,11 @@ def i_counter():
             everyline = csv.reader(file)
             for everyrow in everyline:
                 old_log.append(everyrow)
-
-        i = int(old_log[len(old_log) - 1][1])
-        i += 1
+        if old_log[len(old_log) - 1][0] == f"{today}_counter":
+            i = int(old_log[len(old_log) - 1][1])
+            i += 1
+        else:
+            i = 1
         with open("log.txt", "w") as file:
             counter = "counter"
             for everyitem in old_log:
@@ -81,14 +76,7 @@ def i_counter():
             counter = "counter"
             file.write(f"{today}_{counter},{i}")
 
-    # if f"{str(today)}_Analyis_number_1" in list_of_file:
-    #     while os.path.exists(f"{str(today)}_Analyis_number_{i}"):
-    #         i += 1
-    # else:
-    #     i = "1"
-
     folder_name = f"{str(today)}_Analyis_number_{i}"
-
     os.mkdir(folder_name, 0o777)
 
     return folder_name
