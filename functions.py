@@ -3,6 +3,7 @@ import fnmatch
 from tabulate import tabulate
 from Bio import SeqIO
 from datetime import date
+import csv
 
 
 # Create a file_list with all the file with the extension requested
@@ -48,34 +49,43 @@ def check_column_name(tsv_file):
             file.write(copia)
 
 
-# def i_counter():
-#
-#     list_of_file = os.listdir("./")
-#     if "extracted_domains.fasta" in list_of_file \
-#             or "domains_table.csv" in list_of_file \
-#             or "domains_list.csv" in list_of_file:
-#         i = 1
-#         while os.path.exists("extracted_domains%s.fasta" % i):
-#             i += 1
-#         while os.path.exists("domains_table%s.csv" % i):
-#             i += 1
-#         while os.path.exists("domains_list%s.csv" % i):
-#             i += 1
-#     else:
-#         i = ""
-#     return i
-
 def i_counter():
     # Set the date
     today = date.today()
-
     list_of_file = os.listdir("./")
-    i = 1
-    if f"{str(today)}_Analyis_number_1" in list_of_file:
-        while os.path.exists(f"{str(today)}_Analyis_number_{i}"):
-            i += 1
+    # if "log.txt" in list_of_file:
+    #     with open("log.txt", "r") as file:
+    #         firstline = csv.reader(file)
+    #         for everyrow in firstline:
+    #             if everyrow[0] == f"{today}_counter":
+    #                 i = int(everyrow[1])
+    #             else:
+
+    if "log.txt" in list_of_file:
+        old_log = []
+        with open("log.txt", "r") as file:
+            everyline = csv.reader(file)
+            for everyrow in everyline:
+                old_log.append(everyrow)
+
+        i = int(old_log[len(old_log) - 1][1])
+        i += 1
+        with open("log.txt", "w") as file:
+            counter = "counter"
+            for everyitem in old_log:
+                file.write(f"{everyitem[0]},{everyitem[1]}\n")
+            file.write(f"{today}_{counter},{i}")
     else:
-        i = "1"
+        with open("log.txt", "w") as file:
+            i = 1
+            counter = "counter"
+            file.write(f"{today}_{counter},{i}")
+
+    # if f"{str(today)}_Analyis_number_1" in list_of_file:
+    #     while os.path.exists(f"{str(today)}_Analyis_number_{i}"):
+    #         i += 1
+    # else:
+    #     i = "1"
 
     folder_name = f"{str(today)}_Analyis_number_{i}"
 

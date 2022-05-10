@@ -95,10 +95,10 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         <head>
         <meta charset="UTF-8">
         <title>Cuterle</title>
-        <link rel="icon" href="images/favicon.ico">
+        <link rel="icon" href="../images/favicon.ico">
         </head>
         <body>
-            <img style="max-width:35%;" src="images/00_logo.png"><br>
+            <img style="max-width:35%;" src="../images/00_logo.png"><br>
             <table style="border:1px solid black">
             <tr>
                 <td>Fasta file input:</td>
@@ -113,7 +113,7 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
                 <td>{number_of_sequeces}</td>
             </tr>
             <tr>
-                <td>Number of domains:</td>
+                <td>Domains found:</td>
                 <td>{number_of_domains}</td>
             </tr>
             <table style="border:1px solid black">
@@ -126,8 +126,8 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
     return text
 
 
-def create_html_output(fasta_file, tsv_file, i, result_dictionary, table_list):
-    with open("graphical_output%i.html" % i, "w") as file:
+def create_html_output(folder_name, fasta_file, tsv_file, result_dictionary, table_list):
+    with open(f"{folder_name}/graphical_output.html", "w") as file:
         texts_to_write = html_body(fasta_file, tsv_file, result_dictionary, table_list)
         file.write(texts_to_write)
         # pdfkit.from_file(file)

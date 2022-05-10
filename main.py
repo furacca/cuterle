@@ -79,16 +79,6 @@ cuterle_parser.add_argument("-accession",
                             type=str,
                             )
 
-cuterle_parser.add_argument("-savetable",
-                            help="Export all kind of domains extracted in ~.csv file, sort by matches",
-                            action="store_true"
-                            )
-
-cuterle_parser.add_argument("-html",
-                            help="Graphical output",
-                            action="store_true"
-                            )
-
 cuterle_parser.add_argument("-draw_image",
                             help="FOR EACH sequences create a ~.jpg file reporting sequence+domains",
                             action="store_true"
@@ -102,8 +92,6 @@ fasta_file = cuterle_options.fasta
 prior_choice = cuterle_options.a
 name_format = cuterle_options.nf
 accession = cuterle_options.accession
-table_choice = cuterle_options.savetable
-html_choice = cuterle_options.html
 draw_choice = cuterle_options.draw_image
 
 # *********************************************************************************************
@@ -160,10 +148,7 @@ else:
             print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
             pass
 
-
-
 folder_name = i_counter()
-
 
 # Checks (and eventually add) if the tsv file already has columns' name (0, 1, 2, 3, ...)
 check_column_name(tsv_file)
@@ -192,14 +177,13 @@ smart_plus_pfam = smart_counter + pfam_counter
 
 # Create a table
 table_list = create_table_row_list(result_dictionary)
-
 if manual_mode:
-    if table_choice:
-        with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
-            for everyrow in table_list:
-                domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
-    if html_choice:
-        create_html_output(fasta_file, tsv_file, result_dictionary, table_list)
+    # if table_choice:
+    with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
+        for everyrow in table_list:
+            domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+    # if html_choice:
+    create_html_output(folder_name, fasta_file, tsv_file, result_dictionary, table_list)
 
     save_choice_list = []
     domain_to_save = []
