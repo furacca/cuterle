@@ -6,7 +6,6 @@ from create_html_output import *
 import pandas as pd
 import argparse
 import textwrap
-from datetime import date
 
 # Argparse - The raccomanded command-line parsing module in the python standard library
 description_message = '''\
@@ -211,7 +210,7 @@ else:
             with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
                 for everyrow in table_list:
                     domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
-                print(f"You can find your results in domains_list%s.csv\n" % i)
+                print(f"You can find your results in domains_list.csv inside {folder_name}")
             break
         elif table_choice == "n":
             break
@@ -317,7 +316,7 @@ for everyprotein in protein_list:
             domain_saved += 1
 
 if manual_mode is False:
-    print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
+    print(f"\n{domain_saved} domains had been saved in extracted_domains.fasta")
 
 # # *********************************************************************************************
 # # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)

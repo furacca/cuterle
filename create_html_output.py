@@ -98,7 +98,7 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         <link rel="icon" href="../images/favicon.ico">
         </head>
         <body>
-            <img style="max-width:35%;" src="../images/00_logo.png"><br>
+            <img style="max-width:35%;" src="../images/00_logo.png" alt="CUTERLE'S LOGO"><br>
             <table style="border:1px solid black">
             <tr>
                 <td>Fasta file input:</td>
