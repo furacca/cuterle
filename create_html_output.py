@@ -33,35 +33,56 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
     '''
 
     for everyprotein in protein_list_html:
-
         t_domains_found = result_dictionary[everyprotein]["Domains_found"]
         domain_sorted_list = top_five_domains(result_dictionary, everyprotein)
         t_sequence_len = len(result_dictionary[everyprotein]["Sequence"])
+
+        image = ""
+        if t_domains_found > 0:
+            image = f'''<img class="preview" src="./preview/{everyprotein}.jpg" alt="Preview of the protein image; if you can read this, then re-run cuterle with -draw_image option">'''
+        elif t_domains_found == 0:
+            image = '''<p class="preview" align="center"> This protein has no domain to draw. </p>'''
+
         single_protein_information += f'''
         \n\t\t\t
         <details open>
-        <summary style="display: flex; cursor: pointer; background:lightgray;">
+        <summary class="summary_sequence">
         <b>{everyprotein}</b>
         </summary>
-        <table border=3px" style="textalign: center;">
+        <table>
             <tbody>
             <tr>
             <td>
                 <table>
-                <tr><td> Sequence name: </td><td>{everyprotein}</td></tr>
-                <tr><td> Length: </td><td>{t_sequence_len}</td></tr>
-                <tr><td> Domains found: </td><td>{t_domains_found}</td></tr>
-                <tr><td> Domain's name </td><td>Copy of it:</td></tr>{domain_sorted_list}
+                <tr>
+                    <td style="min-width:400px"> Sequence name: </td>
+                    <td>{everyprotein}</td>
+                </tr>
+                <tr>
+                    <td> Length: </td>
+                    <td>{t_sequence_len}</td>
+                </tr>
+                <tr>
+                <td> Domains found: </td>
+                <td>{t_domains_found}</td></tr>
+                <tr>
+                    <td><br></td><td><br></td>
+                </tr>
+                <tr>
+                    <td><b> Domain's name </b></td>
+                    <td><b>Quantity:</b></td>
+                </tr>
+{domain_sorted_list}
                 </table>
                 </td>
                 <td>
-                <img class="preview" src="./preview/{everyprotein}.jpg" alt="Preview of the protein image; if you can read this, then re-run cuterle with -draw_image option">
+                {image}
                 </td>
             </tr>
             </tbody>
         </table>
         <details>
-        <summary style="display: flex; cursor: pointer;">
+        <summary class="summary_domain_details">
         <i>Click me for detailed information about domains</i>
         </summary>
         <table>'''
@@ -91,6 +112,7 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         single_protein_information += f'''
         </table>
         </details>
+        <br>
         </details>
         '''
 
@@ -103,42 +125,91 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         <link rel="icon" href="../images/favicon.ico">
         </head>
         <style>
+        
+          body {{
+          margin: 1%;
+          font-family: Arial;
+          }}
+          
           table, th, td {{
           border: 0px solid black;
           border-collapse: collapse;
           }}
+          
+          .sub_head {{
+          
+          }}
+          
           .preview {{
           display: block;
           margin-left: auto;
           margin-right: auto;
           width: 50%;
+          min-width: 350px;
           }}
+          
+          .summary_summary {{
+          color: rgb(17, 48, 78);
+          background: rgb(219, 226, 239);
+          padding: 8px;
+          }}
+          
+          .summary_sequence {{
+          cursor: pointer;
+          color: rgb(17, 48, 78);
+          background: rgb(219, 226, 239);
+          padding: 8px;
+          }}
+          
+          .summary_domain_details {{
+          cursor: pointer;
+          padding: 8px;
+          }}
+          
+          .caption_mod {{
+          }}
+          
         </style>
         <body>
             <img style="max-width:35%;" src="../images/00_logo.png" alt="CUTERLE'S LOGO"><br>
-            <table style="border:1px solid black">
+            
+            <details open>
+            <br>
+            <summary class="summary_summary">
+            <b>SUMMARY</b>
+            </summary>
+            <table>
             <tr>
-                <td>Fasta file input:</td>
+                <td><b>Fasta file input:</td>
                 <td>{fasta_file}</td>
             </tr>
             <tr>
-                <td>TSV file input:</td>
+                <td><b>TSV file input:</td>
                 <td>{tsv_file}</td>
             </tr>
             <tr>
-                <td>Number of sequence{plural}:</td>
+                <td><b>Sequence{plural}:</td>
                 <td>{number_of_sequeces}</td>
             </tr>
             <tr>
-                <td>Domains found:</td>
+                <td><b>Domains found:</td>
                 <td>{number_of_domains}</td>
             </tr>
-            <table style="border:1px solid black">
-                <tr><td>Accession ID</td><td>DOMAIN NAME</td><td>NUMBER OF DOMAINS</td></tr>
+                <tr>
+                    <td><br></td><td><br></td>
+                    <td><br></td>
+                </tr>
+                <tr>
+                    <td style="min-width:200px><p class="sub_head"><b>Accession ID</b></p></td>
+                    <td style="min-width:500px><p class="sub_head"><b>DOMAIN NAME</b></p></td>
+                    <td><p class="sub_head"><b>NUMBER OF DOMAINS</b></p></td>
+                </tr>
 {one_line_for_every_domain}
             </table>
+            <br>
+            </details>
             {single_protein_information}
-        <body>
+        </body>
     </html>
     '''
     return text

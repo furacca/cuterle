@@ -27,7 +27,11 @@ def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
     for n in range(0, number_of_domains):
         dict_domain_color[table_list[n][1]] = main_domains_color[n]
 
+    # Create preview folder
     os.mkdir(f"{folder_name}/preview")
+
+    # Create sequences_draw folder
+    os.mkdir(f"{folder_name}/sequences_draw")
 
     # ***********************************************************************
     # STARTING THE DRAWING PROCESS - FOR CYCLE TAKE ONE PROTEIN AT TIME
@@ -279,7 +283,7 @@ def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
             psimage.load(scale=7)
             # Saving the image as .png
             # For PNG format just change .jpg in .png
-            psimage.save(f"{folder_name}/{z}.jpg", dpi=(100, 100), quality=95)
+            psimage.save(f"{folder_name}/sequences_draw/{z}.jpg", dpi=(100, 100), quality=95)
             psimage.close()
 
             psimage = Image.open("temp_%s.ps" % z)
