@@ -1,4 +1,3 @@
-import pdfkit
 from functions import *
 
 text = ""
@@ -29,7 +28,6 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
     for everyrow in table_list:
         one_line_for_every_domain += f'''\n\t\t\t\t<tr><td>{everyrow[0]}</td><td>{everyrow[1]}</td><td>{everyrow[2]}</td></tr>'''
 
-
     protein_list_html = protein_list_maker(fasta_file)
     single_protein_information = '''
     '''
@@ -37,6 +35,7 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
     for everyprotein in protein_list_html:
 
         t_domains_found = result_dictionary[everyprotein]["Domains_found"]
+        domain_sorted_list = top_five_domains(result_dictionary, everyprotein)
         t_sequence_len = len(result_dictionary[everyprotein]["Sequence"])
         single_protein_information += f'''
         \n\t\t\t
@@ -44,10 +43,22 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         <summary style="display: flex; cursor: pointer; background:lightgray;">
         <b>{everyprotein}</b>
         </summary>
-        <table>
-        <tr><td> Sequence name: </td><td>{everyprotein}</td></tr>
-        <tr><td> Length: </td><td>{t_sequence_len}</td></tr>
-        <tr><td> Domains found: </td><td>{t_domains_found}</td></tr>
+        <table border=3px" style="textalign: center;">
+            <tbody>
+            <tr>
+            <td>
+                <table>
+                <tr><td> Sequence name: </td><td>{everyprotein}</td></tr>
+                <tr><td> Length: </td><td>{t_sequence_len}</td></tr>
+                <tr><td> Domains found: </td><td>{t_domains_found}</td></tr>
+                <tr><td> Domain's name </td><td>Copy of it:</td></tr>{domain_sorted_list}
+                </table>
+                </td>
+                <td>
+                <img class="preview" src="./preview/{everyprotein}.jpg" alt="Preview of the protein image; if you can read this, then re-run cuterle with -draw_image option">
+                </td>
+            </tr>
+            </tbody>
         </table>
         <details>
         <summary style="display: flex; cursor: pointer;">
@@ -77,12 +88,6 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
             <tr><td><details><summary>Domain sequence (click to open)</summary>{t_domain_sequence}</details></td></tr>
             '''
 
-        #     domains_dict[everydomain]=[domain_name, domain_order, domain_length, start_location, stop_location, ip_accession]
-        #
-        # for everydomain in domains_dict.keys():
-        #     t_domain_name = domains_dict[everydomain][0]
-        #     t_
-
         single_protein_information += f'''
         </table>
         </details>
@@ -97,6 +102,18 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         <title>Cuterle</title>
         <link rel="icon" href="../images/favicon.ico">
         </head>
+        <style>
+          table, th, td {{
+          border: 0px solid black;
+          border-collapse: collapse;
+          }}
+          .preview {{
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 50%;
+          }}
+        </style>
         <body>
             <img style="max-width:35%;" src="../images/00_logo.png" alt="CUTERLE'S LOGO"><br>
             <table style="border:1px solid black">
@@ -117,7 +134,8 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
                 <td>{number_of_domains}</td>
             </tr>
             <table style="border:1px solid black">
-                <tr><td>Accession ID</td><td>DOMAIN NAME</td><td>NUMBER OF DOMAINS</td></tr>{one_line_for_every_domain}
+                <tr><td>Accession ID</td><td>DOMAIN NAME</td><td>NUMBER OF DOMAINS</td></tr>
+{one_line_for_every_domain}
             </table>
             {single_protein_information}
         <body>
@@ -130,5 +148,4 @@ def create_html_output(folder_name, fasta_file, tsv_file, result_dictionary, tab
     with open(f"{folder_name}/graphical_output.html", "w") as file:
         texts_to_write = html_body(fasta_file, tsv_file, result_dictionary, table_list)
         file.write(texts_to_write)
-        # pdfkit.from_file(file)
 

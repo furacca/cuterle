@@ -81,6 +81,7 @@ def i_counter():
 
     return folder_name
 
+
 def seq_in_fastafile_count(fasta_file):
     with open(fasta_file, "r") as file:
         fileread = file.read()
@@ -138,3 +139,22 @@ def printing_table(table_list):
                    colalign=("center", "center", "center"),
                    showindex="always"
                    ))
+
+
+def top_five_domains(result_dictionary, everyprotein):
+    domain_sorted_list = ""
+    all_domains = {}
+    for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+        domain_name = everydomain["DOMAIN_NAME"]
+        if domain_name in all_domains:
+            all_domains[domain_name] += 1
+        else:
+            all_domains[domain_name] = 1
+
+    all_domain_sorted = dict(sorted(all_domains.items(), key=lambda item: item[1], reverse=True))
+    t_keys = list(all_domain_sorted.keys())
+
+    for everyitem in t_keys:
+        domain_sorted_list += f"\t\t\t\t<tr><td>{everyitem}</td><td>{all_domain_sorted[everyitem]}</td></tr>\n"
+
+    return domain_sorted_list

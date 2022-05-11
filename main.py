@@ -1,4 +1,4 @@
-from functions import *
+
 from result_dictionary_maker import *
 from drawer import *
 from asciithing import *
@@ -316,7 +316,7 @@ for everyprotein in protein_list:
             domain_saved += 1
 
 if manual_mode is False:
-    print(f"\n{domain_saved} domains had been saved in extracted_domains.fasta")
+    print(f"\n{domain_saved} domains had been saved in extracted_domains.fasta inside {folder_name}")
 
 # # *********************************************************************************************
 # # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)

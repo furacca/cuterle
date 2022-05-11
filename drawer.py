@@ -15,15 +15,6 @@ def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
     style_text_scale = ("Arial", 20, "italic")
     style_text_segment_scale = ("Arial", 10, "")
 
-    # Counter to rename output file when another file with the same name exist
-    list_of_file = os.listdir("./")
-    if "domains_view.jpg" in list_of_file:
-        z = 1
-        while os.path.exists("domains_view%s.jpg" % z):
-            z += 1
-    else:
-        z = 1
-
     item_in_list = len(table_list)
 
     if item_in_list < 9:
@@ -36,12 +27,17 @@ def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
     for n in range(0, number_of_domains):
         dict_domain_color[table_list[n][1]] = main_domains_color[n]
 
+    os.mkdir(f"{folder_name}/preview")
+
     # ***********************************************************************
     # STARTING THE DRAWING PROCESS - FOR CYCLE TAKE ONE PROTEIN AT TIME
     # ***********************************************************************
 
     # For every protein in protein list extract the lines containing analysis_used
     for everyprotein in protein_list:
+        # The jpg output will have the name of the protein
+        z = everyprotein
+
         domain_counter = 0
         protein_length = len(result_dictionary[everyprotein]["Sequence"])
 
@@ -283,12 +279,15 @@ def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
             psimage.load(scale=7)
             # Saving the image as .png
             # For PNG format just change .jpg in .png
-            psimage.save(f"{folder_name}/domains_view.jpg", dpi=(100, 100), quality=95)
+            psimage.save(f"{folder_name}/{z}.jpg", dpi=(100, 100), quality=95)
             psimage.close()
+
+            psimage = Image.open("temp_%s.ps" % z)
+            psimage.load(scale=2)
+            psimage.save(f"{folder_name}/preview/{z}.jpg", dpi=(10, 10), quality=5)
+
 
             # Removing the temporary image .ps created before
             os.remove("temp_%s.ps" % z)
             ts.reset()
 
-        # Increase the counter for the images' name
-        z += 1
