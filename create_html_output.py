@@ -39,7 +39,7 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
 
         image = ""
         if t_domains_found > 0:
-            image = f'''<img class="preview" src="./preview/{everyprotein}.jpg" alt="Preview of the protein image; if you can read this, then re-run cuterle with -draw_image option">'''
+            image = f'''<img class="preview" src="./preview/prev_{everyprotein}.jpg" alt="Preview of the protein image; if you can read this, then re-run cuterle with -draw_image option">'''
         elif t_domains_found == 0:
             image = '''<p class="preview" align="center"> This protein has no domain to draw. </p>'''
 
@@ -149,6 +149,7 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
           }}
           
           .summary_summary {{
+          cursor: pointer;
           color: rgb(17, 48, 78);
           background: rgb(219, 226, 239);
           padding: 8px;
@@ -180,15 +181,15 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
             </summary>
             <table>
             <tr>
-                <td><b>Fasta file input:</td>
+                <td><b>Fasta file input:</b></td>
                 <td>{fasta_file}</td>
             </tr>
             <tr>
-                <td><b>TSV file input:</td>
+                <td><b>TSV file input:</b></td>
                 <td>{tsv_file}</td>
             </tr>
             <tr>
-                <td><b>Sequence{plural}:</td>
+                <td><b>Sequence{plural}:</b></td>
                 <td>{number_of_sequeces}</td>
             </tr>
             <tr>
@@ -200,8 +201,8 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
                     <td><br></td>
                 </tr>
                 <tr>
-                    <td style="min-width:200px><p class="sub_head"><b>Accession ID</b></p></td>
-                    <td style="min-width:500px><p class="sub_head"><b>DOMAIN NAME</b></p></td>
+                    <td style="min-width:200px"><p class="sub_head"><b>Accession ID</b></p></td>
+                    <td style="min-width:500px"><p class="sub_head"><b>DOMAIN NAME</b></p></td>
                     <td><p class="sub_head"><b>NUMBER OF DOMAINS</b></p></td>
                 </tr>
 {one_line_for_every_domain}

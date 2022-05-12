@@ -288,7 +288,7 @@ def sequences_drawer(protein_list, table_list, result_dictionary, folder_name):
 
             psimage = Image.open("temp_%s.ps" % z)
             psimage.load(scale=2)
-            psimage.save(f"{folder_name}/preview/{z}.jpg", dpi=(10, 10), quality=5)
+            psimage.save(f"{folder_name}/preview/prev_{z}.jpg", dpi=(10, 10), quality=5)
 
 
             # Removing the temporary image .ps created before
