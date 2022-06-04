@@ -1,5 +1,7 @@
 <p align="center"><img src="./images/00_logo.png"></p>
 
+
+[//]: # (da aggiornare)
 # Cuterle
 Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) 
 containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) 
@@ -10,7 +12,7 @@ Cuterle uses two main analysis of InterPro (there are also <a href="https://inte
 - Pfam (XX.X) : A large collection of protein families, each represented by multiple sequence alignments and hidden Markov models (HMMs)
 - SMART (X.X) : SMART allows the identification and analysis of domain architectures based on Hidden Markov Models or HMMs
 
-Cuterle chooses **for every protein** the analysis with more results in ~.tsv file.
+Cuterle chooses **for every protein** the analysis with more results.
 <br>
 <br>
 
@@ -201,11 +203,11 @@ There are two main way to get an tsv file from InterPro:
 ## Next updates
 
 **TOP PRIORITY**
-- None
+- HMMer output support (Maybe in v.2.2.0)
 
 **MEDIUM PRIORITY**
 - None
 
 **LOW PRIORITY**
-- AppImage release?
+- None
 
