@@ -21,16 +21,16 @@ Running the **manual mode** there will be one output folder with this structure:
 `DATE_Analysis_number_X:` Directory which cointains the sequences_draw images scaled to be light to load in the browser
 <br>
 <br>
-`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- sequences_draw` Directory containing the sequences_draw images (created via -draw_image option)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- sequences_draw` Directory containing the sequences_draw images (created via -draw_image option)
 <br>
 <br>
-`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- domains_list.csv` ~.csv file reporting how many times every domains has been found
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- domains_list.csv` ~.csv file reporting how many times every domains has been found
 <br>
 <br>
-`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- extracted_domains.fasta` ~.fasta file containing every domains extracted
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- extracted_domains.fasta` ~.fasta file containing every domains extracted
 <br>
 <br>
-`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- graphical_output.html` ~.html file granting browsable graphical output
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- graphical_output.html` ~.html file granting browsable graphical output
 <br>
 <br>
 <br>
