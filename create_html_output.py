@@ -116,7 +116,6 @@ def html_body(fasta_file, tsv_file, result_dictionary, table_list):
         </details>
         '''
 
-
     text = f'''
     <html>
         <head>

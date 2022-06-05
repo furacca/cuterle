@@ -43,9 +43,11 @@ Running the **manual mode** there will be one output folder with this structure:
 - [Examples manual mode syntax](#examples-manual-mode-syntax)<br>
 - [Usage - Assisted mode](#usage---assisted-mode)<br>
 - [Usage - Graphical mode](#usage---graphical-mode)<br>
+- [Output example - HTML_file](#output-example---HTML-file)<br>
 - [Output example - Fasta list](#output-example---fasta-list)<br>
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
 - [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
+- [Log](#log)<br>
 - [Next updates](#next-updates)<br>
 
 ## Suggested use
@@ -181,9 +183,11 @@ Summary table ("Accession ID", "Domain name" and "Domains' number found" as head
 
 
 ## Output example - HTML file
-From the v2.1.0 
+From the v2.1.0 an graphical_output.html file will automatically be created. 
 
-
+<img src="./images/05_HTML_output.png" width="500">
+<br>
+<br>
 
 ## Output example - Fasta list
 
@@ -223,6 +227,8 @@ There are two main way to get an tsv file from InterPro:
 
 <br><br>
 
+## Log
+Deleting the log file will reset the date counter
 
 ## Next updates
 

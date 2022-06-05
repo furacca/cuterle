@@ -51,6 +51,8 @@ def result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_fil
                 if record.id == everyprotein:
                     protein_sequence = f"{record.seq}"
 
+        reverse_value = False
+
         if domain_order == "Increasing":
             reverse_value = False
         elif domain_order == "Decreasing":
