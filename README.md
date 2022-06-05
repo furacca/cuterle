@@ -15,6 +15,27 @@ Cuterle uses two main analysis of InterPro (there are also <a href="https://inte
 Cuterle chooses **for every protein** the analysis with more results.
 <br>
 <br>
+Running the **manual mode** there will be one output folder with this structure:
+`
+DATE_Analysis_number_X:
+`
+<br>
+`- preview`
+Directory which cointains the sequences_draw images scaled to be light to load in the browser
+<br>
+`- sequences_draw` Directory containing the sequences_draw images (created via -draw_image option)
+<br>
+<br>
+`- domains_list.csv` ~.csv file reporting how many times every domains has been found
+<br>
+<br>
+`- extracted_domains.fasta` ~.fasta file containing every domains extracted
+<br>
+<br>
+`- graphical_output.html` ~.html file granting browsable graphical output
+<br>
+<br>
+<br>
 
 **Index**
 - [Suggested use](#suggested-use)<br>
@@ -119,7 +140,6 @@ optional arguments:
   -a Pfam or SMART   Prior choice between 'Pfam' and 'SMART'. Read the documentation.
   -nf NF             Name format. Read the documentation. Format: [1,2,3,4,5,6]
   -accession ACCESSION  InterPro annotations - accession (e.g. IPR002035)
-  -savetable         Export all kind of domains extracted in ~.csv file, sort by matches
   -draw_image        FOR EACH sequences create a ~.jpg file reporting sequence+domains
 ```
 <br>
@@ -157,10 +177,15 @@ For every input file there is a check which guarantee its existence and the righ
 If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file).
 
 Summary table ("Accession ID", "Domain name" and "Domains' number found" as header) is graphically printed.
-It's possible to save it.
 
 <img src="./images/02_first_run.png" width="500">
 <br>
+
+
+## Output example - HTML file
+From the v2.1.0 
+
+
 
 ## Output example - Fasta list
 
@@ -176,7 +201,7 @@ Where every {number} refer to the follow information:
 - {5} - InterPro annotations - description (e.g. [BRCA2 repeat])
 - {6} - Signature accession (e.g. [IPR002035])
 
-It's possible to change the syntax only by running the manual mode (or manual editing the code).
+It's possible to change the syntax only by running the manual mode.
 
 <img src="./images/04_extracted_domain_output.png" width="500">
 
