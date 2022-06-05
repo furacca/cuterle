@@ -1,15 +1,37 @@
-<p align="center"><img src="./screenshots/00_logo.png"></p>
+<p align="center"><img src="./images/00_logo.png"></p>
 
+
+[//]: # (da aggiornare)
 # Cuterle
 Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) 
 containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) 
 from the list of protein (`~.fasta file`) submitted.
 
+
 Cuterle uses two main analysis of InterPro (there are also <a href="https://interproscan-docs.readthedocs.io/en/latest/HowToRun.html#included-analyses">others analysis</a>):
 - Pfam (XX.X) : A large collection of protein families, each represented by multiple sequence alignments and hidden Markov models (HMMs)
 - SMART (X.X) : SMART allows the identification and analysis of domain architectures based on Hidden Markov Models or HMMs
 
-Cuterle chooses **for every protein** the analysis with more results in ~.tsv file.
+Cuterle chooses **for every protein** the analysis with more results.
+<br>
+<br>
+Running the **manual mode** there will be one output folder with this structure:
+<br>
+<br>
+`YYYY/MM/DD_Analysis_number_X:` **Directory** which cointains the sequences_draw images scaled to be light to load in the browser
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- sequences_draw` **Directory** containing the sequences_draw images (created via -draw_image option)
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- domains_list.csv` **~.csv file** reporting how many times every domains has been found
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- extracted_domains.fasta` **~.fasta file** containing every domains extracted
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`- graphical_output.html` **~.html file** granting browsable graphical output
+<br>
 <br>
 <br>
 
@@ -21,9 +43,11 @@ Cuterle chooses **for every protein** the analysis with more results in ~.tsv fi
 - [Examples manual mode syntax](#examples-manual-mode-syntax)<br>
 - [Usage - Assisted mode](#usage---assisted-mode)<br>
 - [Usage - Graphical mode](#usage---graphical-mode)<br>
+- [Output example - HTML_file](#output-example---HTML-file)<br>
 - [Output example - Fasta list](#output-example---fasta-list)<br>
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
 - [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
+- [Log](#log)<br>
 - [Next updates](#next-updates)<br>
 
 ## Suggested use
@@ -37,7 +61,8 @@ I want to extract a specific domain (IPR002035) from transcriptome:
 3) Run Cuterle:<br>`python3 main.py -tsv transcriptome_result.tsv -fasta transcriptome.fasta -accession IPR002035`
 4) Be happy with your `extracted_domains.fasta` result file
 
-Thanks to the arguments option, the point 2,3 and 4 are scriptable, saving **A LOT** of time.
+Thanks to the arguments option, the point 2 and 3 are scriptable, saving **A LOT** of time.<br>
+(Happiness can't be scripted; tough life)
 
 *Post Scriptum*<br>
 With multiple transcriptomes to scan you should run an HMMER analysis, creating a reducted fasta list to use in point 2
@@ -115,7 +140,6 @@ optional arguments:
   -a Pfam or SMART   Prior choice between 'Pfam' and 'SMART'. Read the documentation.
   -nf NF             Name format. Read the documentation. Format: [1,2,3,4,5,6]
   -accession ACCESSION  InterPro annotations - accession (e.g. IPR002035)
-  -savetable         Export all kind of domains extracted in ~.csv file, sort by matches
   -draw_image        FOR EACH sequences create a ~.jpg file reporting sequence+domains
 ```
 <br>
@@ -123,7 +147,7 @@ optional arguments:
 ### Examples manual mode syntax
 
 ```
-python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -nf 1,2,3 -savetable -drawimage
+python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -nf 1,2,3 -drawimage
 ```
 
 ```
@@ -132,7 +156,7 @@ python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -a SM
 
 ### Usage - Graphical mode
 An ultra-simple-gui has been created. So bad it's good.
-<img src="./screenshots/07_main_gui.png" width="700">
+<img src="./images/07_main_gui.png" width="500">
 
 ### Usage - Assisted mode
 In terminal run:
@@ -142,8 +166,8 @@ python3 main.py
 If no optional argument is given, the program will run in _assisted mode_ (which is **a lot** verbose). <br>
 
 
-<img src="./screenshots/01_first_view.png" width="700">
-<!-- ![](./screenshots/01_first_view.png) -->
+<img src="./images/01_first_view.png" width="500">
+<!-- ![](./images/01_first_view.png) -->
 
 
 Once you run main.py in terminal, the program request the two input files (~.tsv and ~.fasta).<br>
@@ -153,9 +177,16 @@ For every input file there is a check which guarantee its existence and the righ
 If you are not sure about how getting the tsv file follow [How to get a ~.tsv file](#how-to-get-a-tsv-file).
 
 Summary table ("Accession ID", "Domain name" and "Domains' number found" as header) is graphically printed.
-It's possible to save it.
 
-<img src="./screenshots/02_first_run.png" width="700">
+<img src="./images/02_first_run.png" width="500">
+<br>
+
+
+## Output example - HTML file
+From the v2.1.0 an graphical_output.html file will automatically be created. 
+
+<img src="./images/05_HTML_output.png" width="500">
+<br>
 <br>
 
 ## Output example - Fasta list
@@ -172,9 +203,9 @@ Where every {number} refer to the follow information:
 - {5} - InterPro annotations - description (e.g. [BRCA2 repeat])
 - {6} - Signature accession (e.g. [IPR002035])
 
-It's possible to change the syntax only by running the manual mode (or manual editing the code).
+It's possible to change the syntax only by running the manual mode.
 
-<img src="./screenshots/04_extracted_domain_output.png" width="700">
+<img src="./images/04_extracted_domain_output.png" width="500">
 
 <br>
 
@@ -185,26 +216,28 @@ Every domain has a default color which is the same for all the proteins. There a
 - Scale applied (if the scale is 1, it's hidden)
 - Draw of the protein with its domains
 
-<img src="./screenshots/03_graphical_output.jpg" width="700">
+<img src="./images/03_graphical_output.jpg" width="500">
 
 ## How to get a ~.tsv file
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install and run it on some local machine
 2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtain the tsv file (like in the screenshot below):
 
-2) <img src="./screenshots/06_InterProWebsite.png" width="700">
+2) <img src="./images/06_InterProWebsite.png" width="500">
 
 <br><br>
 
+## Log
+Deleting the log file will reset the date counter
 
 ## Next updates
 
 **TOP PRIORITY**
-- None
+- HMMer output support (Maybe in v.2.2.0)
 
 **MEDIUM PRIORITY**
 - None
 
 **LOW PRIORITY**
-- AppImage release?
+- None
 

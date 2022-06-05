@@ -1,7 +1,8 @@
-from functions import *
+
 from result_dictionary_maker import *
 from drawer import *
 from asciithing import *
+from create_html_output import *
 import pandas as pd
 import argparse
 import textwrap
@@ -16,7 +17,6 @@ description_message = '''\
                             Cuterle is a bioinformatic tool.
                             It returns an output file containing every domain annotated by InterProScan.
                             Pfam or SMART analysis are choosen by which method has more matches.
-
 
                         LIST OF OUTPUT FILE
 
@@ -69,18 +69,13 @@ cuterle_parser.add_argument("-a",
                             )
 
 cuterle_parser.add_argument("-nf",
-                            help="Name format. Read the documentation. Format: [1,2,3,4,5]",
+                            help="Name format. Read the documentation. Default format: [1,2,3,4,5,6]",
                             type=str,
                             )
 
 cuterle_parser.add_argument("-accession",
                             help="InterPro annotations - accession ((e.g. IPR002093)",
                             type=str,
-                            )
-
-cuterle_parser.add_argument("-savetable",
-                            help="Export all kind of domains extracted in ~.csv file, sort by matches",
-                            action="store_true"
                             )
 
 cuterle_parser.add_argument("-draw_image",
@@ -96,7 +91,6 @@ fasta_file = cuterle_options.fasta
 prior_choice = cuterle_options.a
 name_format = cuterle_options.nf
 accession = cuterle_options.accession
-table_choice = cuterle_options.savetable
 draw_choice = cuterle_options.draw_image
 
 # *********************************************************************************************
@@ -131,7 +125,7 @@ elif manual_mode is False:
             pass
 
 # Get fasta file as input - The while loop checks the existences of the input fasta file
-if manual_mode and existence_file_check(tsv_file, "*.fasta"):
+if manual_mode and existence_file_check(fasta_file, "*.fasta"):
     pass
 elif manual_mode and fasta_file is None:
     print(f"You have not selected any fasta file!")
@@ -153,9 +147,7 @@ else:
             print(f"{fasta_file} doesn't exist or doesn't has .fasta extension. Retry.")
             pass
 
-# The "i" set the same number-counter for all output file (extracted_files, table, log, ecc),
-# avoiding overwrite some file previously created
-i = i_counter()
+folder_name = i_counter()
 
 # Checks (and eventually add) if the tsv file already has columns' name (0, 1, 2, 3, ...)
 check_column_name(tsv_file)
@@ -184,12 +176,13 @@ smart_plus_pfam = smart_counter + pfam_counter
 
 # Create a table
 table_list = create_table_row_list(result_dictionary)
-
 if manual_mode:
-    if table_choice:
-        with open("domains_list%s.csv" % i, "w") as domain_csv:
-            for everyrow in table_list:
-                domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+    # if table_choice:
+    with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
+        for everyrow in table_list:
+            domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
+    # if html_choice:
+    create_html_output(folder_name, fasta_file, tsv_file, result_dictionary, table_list)
 
     save_choice_list = []
     domain_to_save = []
@@ -214,10 +207,10 @@ else:
     while True:
         table_choice = input("Do you want to save this table as ~.csv file? y/n ")
         if table_choice == "y":
-            with open("domains_list%s.csv" % i, "w") as domain_csv:
+            with open(f"{folder_name}/domains_list.csv", "w") as domain_csv:
                 for everyrow in table_list:
                     domain_csv.write(f"{everyrow[0]},{everyrow[1]},{everyrow[2]}\n")
-                print(f"You can find your results in domains_list%s.csv\n" % i)
+                print(f"You can find your results in domains_list.csv inside {folder_name}")
             break
         elif table_choice == "n":
             break
@@ -310,20 +303,20 @@ for everyprotein in protein_list:
 
             # If the output file already exists, append the sequences
             try:
-                with open("extracted_domains%s.fasta" % i, "a") as file_output:
+                with open(f"{folder_name}/extracted_domains.fasta", "a") as file_output:
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
             # ----> IF OUTPUTFILE DOES NOT EXIST, THEN WE CREATE IT WITH THE FIRST SEQUENCE
             except FileNotFoundError:
-                with open("extracted_domains%s.fasta" % i, "w") as file_output:
+                with open(f"{folder_name}/extracted_domains.fasta", "w") as file_output:
                     file_output.write(f"{name_format_string_final}\n")
                     file_output.write(f"{domain_sequence}\n\n")
 
             domain_saved += 1
 
 if manual_mode is False:
-    print(f"\n{domain_saved} domains had been saved in extracted_domains{i}.fasta")
+    print(f"\n{domain_saved} domains had been saved in extracted_domains.fasta inside {folder_name}")
 
 # # *********************************************************************************************
 # # ASK FOR DRAW EVERY SEQUENCES (SEE DRAW.PY)
@@ -334,7 +327,7 @@ if manual_mode:
         result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                     domain_order)
 
-        sequences_drawer(protein_list, table_list, result_dictionary)
+        sequences_drawer(protein_list, table_list, result_dictionary, folder_name)
 else:
     print(separator)
     while True:
@@ -349,7 +342,7 @@ else:
                     domain_order = "Decreasing"
                     result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                                 domain_order)
-                    sequences_drawer(protein_list, table_list, result_dictionary)
+                    sequences_drawer(protein_list, table_list, result_dictionary, folder_name)
                     break
                 elif choice == "n":
                     break
@@ -360,7 +353,7 @@ else:
             domain_order = "Decreasing"
             result_dictionary = result_dictionary_maker(protein_list, dataframe_tsv, prior_choice, fasta_file,
                                                         domain_order)
-            sequences_drawer(protein_list, table_list, result_dictionary)
+            sequences_drawer(protein_list, table_list, result_dictionary, folder_name)
             break
         elif wanna_draw == "n":
             break

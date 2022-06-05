@@ -2,6 +2,8 @@ import os
 import fnmatch
 from tabulate import tabulate
 from Bio import SeqIO
+from datetime import date
+import csv
 
 
 # Create a file_list with all the file with the extension requested
@@ -48,20 +50,36 @@ def check_column_name(tsv_file):
 
 
 def i_counter():
+    # Set the date
+    today = date.today()
     list_of_file = os.listdir("./")
-    if "extracted_domains.fasta" in list_of_file \
-            or "domains_table.csv" in list_of_file \
-            or "domains_list.csv" in list_of_file:
-        i = 1
-        while os.path.exists("extracted_domains%s.fasta" % i):
+
+    if "log.txt" in list_of_file:
+        old_log = []
+        with open("log.txt", "r") as file:
+            everyline = csv.reader(file)
+            for everyrow in everyline:
+                old_log.append(everyrow)
+        if old_log[len(old_log) - 1][0] == f"{today}_counter":
+            i = int(old_log[len(old_log) - 1][1])
             i += 1
-        while os.path.exists("domains_table%s.csv" % i):
-            i += 1
-        while os.path.exists("domains_list%s.csv" % i):
-            i += 1
+        else:
+            i = 1
+        with open("log.txt", "w") as file:
+            counter = "counter"
+            for everyitem in old_log:
+                file.write(f"{everyitem[0]},{everyitem[1]}\n")
+            file.write(f"{today}_{counter},{i}")
     else:
-        i = ""
-    return i
+        with open("log.txt", "w") as file:
+            i = 1
+            counter = "counter"
+            file.write(f"{today}_{counter},{i}")
+
+    folder_name = f"{str(today)}_Analyis_number_{i}"
+    os.mkdir(folder_name, 0o777)
+
+    return folder_name
 
 
 def seq_in_fastafile_count(fasta_file):
@@ -121,3 +139,22 @@ def printing_table(table_list):
                    colalign=("center", "center", "center"),
                    showindex="always"
                    ))
+
+
+def top_five_domains(result_dictionary, everyprotein):
+    domain_sorted_list = ""
+    all_domains = {}
+    for everydomain in result_dictionary[everyprotein]["Extracted_domains"]:
+        domain_name = everydomain["DOMAIN_NAME"]
+        if domain_name in all_domains:
+            all_domains[domain_name] += 1
+        else:
+            all_domains[domain_name] = 1
+
+    all_domain_sorted = dict(sorted(all_domains.items(), key=lambda item: item[1], reverse=True))
+    t_keys = list(all_domain_sorted.keys())
+
+    for everyitem in t_keys:
+        domain_sorted_list += f"\t\t\t\t<tr><td>{everyitem}</td><td>{all_domain_sorted[everyitem]}</td></tr>\n"
+
+    return domain_sorted_list
