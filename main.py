@@ -69,7 +69,7 @@ cuterle_parser.add_argument("-a",
                             )
 
 cuterle_parser.add_argument("-nf",
-                            help="Name format. Read the documentation. Default format: [1,2,3,4,5]",
+                            help="Name format. Read the documentation. Default format: [1,2,3,4,5,6]",
                             type=str,
                             )
 

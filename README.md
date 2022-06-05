@@ -40,7 +40,8 @@ I want to extract a specific domain (IPR002035) from transcriptome:
 3) Run Cuterle:<br>`python3 main.py -tsv transcriptome_result.tsv -fasta transcriptome.fasta -accession IPR002035`
 4) Be happy with your `extracted_domains.fasta` result file
 
-Thanks to the arguments option, the point 2,3 and 4 are scriptable, saving **A LOT** of time.
+Thanks to the arguments option, the point 2 and 3 are scriptable, saving **A LOT** of time.<br>
+(Happiness can't be scripted; tough life)
 
 *Post Scriptum*<br>
 With multiple transcriptomes to scan you should run an HMMER analysis, creating a reducted fasta list to use in point 2
@@ -135,7 +136,7 @@ python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -a SM
 
 ### Usage - Graphical mode
 An ultra-simple-gui has been created. So bad it's good.
-<img src="./images/07_main_gui.png" width="700">
+<img src="./images/07_main_gui.png" width="500">
 
 ### Usage - Assisted mode
 In terminal run:
@@ -145,7 +146,7 @@ python3 main.py
 If no optional argument is given, the program will run in _assisted mode_ (which is **a lot** verbose). <br>
 
 
-<img src="./images/01_first_view.png" width="700">
+<img src="./images/01_first_view.png" width="500">
 <!-- ![](./images/01_first_view.png) -->
 
 
@@ -158,7 +159,7 @@ If you are not sure about how getting the tsv file follow [How to get a ~.tsv fi
 Summary table ("Accession ID", "Domain name" and "Domains' number found" as header) is graphically printed.
 It's possible to save it.
 
-<img src="./images/02_first_run.png" width="700">
+<img src="./images/02_first_run.png" width="500">
 <br>
 
 ## Output example - Fasta list
@@ -177,7 +178,7 @@ Where every {number} refer to the follow information:
 
 It's possible to change the syntax only by running the manual mode (or manual editing the code).
 
-<img src="./images/04_extracted_domain_output.png" width="700">
+<img src="./images/04_extracted_domain_output.png" width="500">
 
 <br>
 
@@ -188,14 +189,14 @@ Every domain has a default color which is the same for all the proteins. There a
 - Scale applied (if the scale is 1, it's hidden)
 - Draw of the protein with its domains
 
-<img src="./images/03_graphical_output.jpg" width="700">
+<img src="./images/03_graphical_output.jpg" width="500">
 
 ## How to get a ~.tsv file
 There are two main way to get an tsv file from InterPro:
 1) Follow the <a href="https://interproscan-docs.readthedocs.io/en/latest/Introduction.html#to-install-and-run-interproscan" target="_blank">InterProScan guide</a> to install and run it on some local machine
 2) Use the official <a href="https://www.ebi.ac.uk/interpro/">InterProScan website</a> to submit the fasta fasta file and obtain the tsv file (like in the screenshot below):
 
-2) <img src="./images/06_InterProWebsite.png" width="700">
+2) <img src="./images/06_InterProWebsite.png" width="500">
 
 <br><br>
 
