@@ -203,7 +203,7 @@ Where every {number} refer to the follow information:
 - {5} - InterPro annotations - description (e.g. [BRCA2 repeat])
 - {6} - Signature accession (e.g. [IPR002035])
 
-It's possible to change the syntax only by running the manual mode.
+Changing the syntax is possible only by running the manual mode.
 
 <img src="./images/04_extracted_domain_output.png" width="500">
 
