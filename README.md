@@ -58,7 +58,7 @@ This program has been thought as **Quality of Life tool** for extracting the dom
 I want to extract a specific domain (IPR002035) from transcriptome:
 1) Download the transcriptome's target obtaining an `trascriptome.fasta` file
 2) Run InterProScan analysis against the transcriptome obtaining an `transcriptome_result.tsv` file: <br>`./interproscan.sh -o ./transcriptome_result.tsv -i ./transcriptome.fasta -f tsv -dp`
-3) Run Cuterle:<br>`python3 main.py -tsv transcriptome_result.tsv -fasta transcriptome.fasta -accession IPR002035`
+3) Run Cuterle:<br>`python3 main.py -m -tsv transcriptome_result.tsv -fasta transcriptome.fasta -accession IPR002035`
 4) Be happy with your `extracted_domains.fasta` result file
 
 Thanks to the arguments option, the point 2 and 3 are scriptable, saving **A LOT** of time.<br>
