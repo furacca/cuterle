@@ -147,7 +147,7 @@ optional arguments:
 ### Examples manual mode syntax
 
 ```
-python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -nf 1,2,3 -drawimage
+python3 main.py -m -tsv vwf_Homo_sapiens.tsv -fasta vwf_Homo_sapiens.fasta -nf 1,2,3 -draw_image
 ```
 
 ```
