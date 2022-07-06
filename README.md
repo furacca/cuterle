@@ -2,6 +2,16 @@
 
 
 [//]: # (da aggiornare)
+
+--------------------------------------------------
+
+# WARNING ! !  ! This project is no longer supported.
+
+# See [Brivez](https://github.com/furacca/brivez) instead.
+
+--------------------------------------------------
+
+
 # Cuterle
 Cuterle is a bioinformatic tool which creates an output file (`extracted_domain.fasta`) 
 containing every domain annotated by [InterProScan](https://www.ebi.ac.uk/interpro/) (`~.tsv file`) 
@@ -43,7 +53,7 @@ Running the **manual mode** there will be one output folder with this structure:
 - [Examples manual mode syntax](#examples-manual-mode-syntax)<br>
 - [Usage - Assisted mode](#usage---assisted-mode)<br>
 - [Usage - Graphical mode](#usage---graphical-mode)<br>
-- [Output example - HTML_file](#output-example---HTML-file)<br>
+- [Output example - HTML file](#output-example---html-file)<br>
 - [Output example - Fasta list](#output-example---fasta-list)<br>
 - [Output example - Sequence's draw](#output-example---sequences-draw)<br>
 - [How to get a ~.tsv file](#how-to-get-a-tsv-file)<br>
@@ -233,7 +243,7 @@ Deleting the log file will reset the date counter
 ## Next updates
 
 **TOP PRIORITY**
-- HMMer output support (Maybe in v.2.2.0)
+- none
 
 **MEDIUM PRIORITY**
 - None
